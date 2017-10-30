@@ -1,0 +1,19 @@
+libtcod 1.6.3 VS2015 setup
+
+1. Create a new empty c++ project
+2. Add a main .cpp file
+3. Go to the project properties
+4. Under "VC++ Directories" do the following:
+ - Include Directories: Add the libtcod 1.6.3 "include" folder
+ - Library Directories: (Set the Configuration modes to Debug & Release accordingly)
+  - Add the "\build\msvs\libtcod\Win32\Debug" folder
+  - Add the "\build\msvs\libtcod\Win32\Release" folder
+  - (If applicable) add the "\build\msvs\libtcod-gui\Win32\Debug" folder
+  - (If applicable) add the "\build\msvs\libtcod-gui\Win32\Release"folder
+  - (If applicable) add the "\build\dependencies\Win32\Debug" folder
+  - (If applicable) add the "\build\dependencies\Win32\Debug" folder
+  
+ 5. Go to "Linker --> General --> Additional Library Directories" and do the same as above
+ 6. Go to "Linker --> Input --> Additional Dependencies" and add 'libtcod.lib', 'libtcod-gui.lib' & 'SDL2.lib' (if they are included)
+ 7. Copy the applicable release/debug versions of: "libtcod.dll", "libtcod-gui.dll", "SDL2.dll" & "terminal.png" to your project's Release/Debug folders
+8. Viola! It should work now! GLHF!! :D
