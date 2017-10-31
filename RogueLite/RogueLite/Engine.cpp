@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
 // CONSTRUCTOR 
-Engine::Engine() : fovRadius(FOV_RADIUS), computeFov(true) {
+Engine::Engine() : gameStatus(STARTUP), fovRadius(FOV_RADIUS) {
 	TCODConsole::initRoot(80, 50, MAINCON_TITLE, false);
 	player = new Actor(0, 0, '@', "Player", TCODColor::white);
 	actors.push(player);
@@ -14,46 +14,49 @@ Engine::~Engine() {
 	delete map;
 }
 
-// Handles the player walking code & associated collision detection
+// Handles the player walking code
 void Engine::update() {
 	TCOD_key_t key;
+	if (gameStatus == STARTUP) map->computeFov();
+	gameStatus = IDLE;
+
 	TCODSystem::checkForEvent(TCOD_EVENT_KEY_PRESS, &key, NULL);
+	int inputX = 0, inputY = 0;
 	switch (key.vk) {
-	
-	case TCODK_UP:
-		if (player->y <= 0) { player->y++; }
-		if (map->isWall(player->x, player->y - 1) == false) { player->y--; computeFov = true; } break;
-
-	case TCODK_DOWN:
-		if (player->y >= conEdgeY) { player->y--; }
-		if (map->isWall(player->x, player->y + 1) == false) { player->y++; computeFov = true; } break;
-
-	case TCODK_LEFT:
-		if (player->x <= 0) { player->x++; }
-		if (map->isWall(player->x - 1, player->y) == false) { player->x--; computeFov = true; } break;
-
-	case TCODK_RIGHT:
-		if (player->x >= conEdgeX) { player->x--; }
-		if (map->isWall(player->x + 1, player->y) == false) { player->x++; computeFov = true; } break;
-
-	default: 
-		break;
+	case TCODK_UP: inputY = -1; break;
+	case TCODK_DOWN: inputY = 1; break;
+	case TCODK_LEFT: inputX = -1; break;
+	case TCODK_RIGHT: inputX = 1; break;
+	default: break;
 	}
-	if (computeFov) {
-		map->computeFov();
-		computeFov = false;
+
+	if (inputX != 0 || inputY != 0) {
+		gameStatus = NEW_TURN;
+		if (player->moveOrAttack(player->x + inputX, player->y + inputY)) {
+			map->computeFov();
+		}
+	}
+
+	if (gameStatus == NEW_TURN) {
+		for (Actor **iterator = actors.begin(); iterator != actors.end(); iterator++) {
+			Actor *actor = *iterator;
+			if (actor != player) {
+				if (map->isInFov(actor->x, actor->y)) actor->update();
+			}
+		}
 	}
 
 	// Other combined/misc keypresses go here
 	if (key.vk == TCODK_ENTER && key.lalt) TCODConsole::setFullscreen(!TCODConsole::isFullscreen());
+	if (key.vk == TCODK_ESCAPE) { if (TCODConsole::isFullscreen()) { TCODConsole::setFullscreen(false); } }
 }
 
 void Engine::render() {
 	TCODConsole::root->clear();
 
 	// Get console edges
-	conEdgeX = (TCODConsole::root->getWidth() - 1);
-	conEdgeY = (TCODConsole::root->getHeight() - 1);
+	//conEdgeX = (TCODConsole::root->getWidth() - 1);
+	//conEdgeY = (TCODConsole::root->getHeight() - 1);
 	
 	//Draw the map
 	map->render();
