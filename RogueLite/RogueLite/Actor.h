@@ -1,6 +1,4 @@
-#pragma once
-
-#define MAX_NAME_SIZE 40
+//#pragma once
 
 class Actor {
 public:
@@ -8,12 +6,14 @@ public:
 	int y;
 	int ch;
 	TCODColor col;
+	const char *name;
 
-	char name[MAX_NAME_SIZE];
+	bool blocks; // can we walk on this actor?
+	Attacker *attacker; // something that deal damage
+	Destructible *destructible; // something that can be damaged
+	Ai *ai; // something self-updating
 
 	Actor(int x, int y, int ch, const char *name, const TCODColor &col);
-	bool moveOrAttack(int x, int y);
-	void update();
-
+	void update(); // Calls 'ai->update(Actor *owner)'
 	void render() const;
 };

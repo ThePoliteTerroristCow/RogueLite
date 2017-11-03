@@ -1,4 +1,4 @@
-#pragma once
+//#pragma once
 
 static const int ROOM_MAX_SIZE = 12;
 static const int ROOM_MIN_SIZE = 6;
@@ -17,7 +17,7 @@ public:
 
 	Map(int width, int height);
 	~Map();
-	void addMonster(int x, int y);
+	FOV *fov;
 	bool canWalk(int x, int y) const;
 	bool isWall(int x, int y) const;
 	bool isInFov(int x, int y) const;
@@ -33,4 +33,5 @@ protected:
 
 	void dig(int x1, int y1, int x2, int y2);
 	void createRoom(bool first, int x1, int y1, int x2, int y2);
+	void addMonster(int x, int y);
 };

@@ -1,11 +1,10 @@
-#include "stdafx.h"
+#include "Main.h"
 
 Actor::Actor(int x, int y, int ch, const char *name, const TCODColor &col) :
-	x(x), y(y), ch(ch), col(col) {
-	strcpy_s(this->name, name);
+	x(x), y(y), ch(ch), col(col), name(name), blocks(true), attacker(NULL), destructible(NULL), ai(NULL) {
 }
 
-bool Actor::moveOrAttack(int x, int y) {
+/*bool Actor::moveOrAttack(int x, int y) {
 	if (engine.map->isWall(x, y) == true) return false;
 	for (Actor **iterator = engine.actors.begin(); iterator != engine.actors.end(); iterator++) {
 		Actor *actor = *iterator;
@@ -18,11 +17,10 @@ bool Actor::moveOrAttack(int x, int y) {
 	this->x = x;
 	this->y = y;
 	return true;
-}
+}*/
 
 void Actor::update() {
-	//if (monsterType[0].compare(name) == 0) printf("The %s growls!\n", name);
-	printf("The %s roars!\n", name);
+	if (ai) ai->update(this);
 }
 
 void Actor::render() const {

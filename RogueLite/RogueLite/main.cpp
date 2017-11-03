@@ -1,6 +1,6 @@
-#include "stdafx.h"
+#include "Main.h"
 
-Engine engine;
+Engine engine(80, 50);
 
 int main(void)
 {

@@ -1,4 +1,4 @@
-#include "stdafx.h"
+#include "Main.h"
 
 class BspListener : public ITCODBspCallback {
 private:
@@ -46,20 +46,6 @@ Map::~Map() {
 }
 
 //////////////////////////////////////////////////////////////////////////
-// MONSTER SPAWNING & HANDLING
-void Map::addMonster(int x, int y) {
-	TCODRandom *rng = TCODRandom::getInstance();
-	if (rng->getInt(0, 100) < 80) { // creates an orc in 80% of cases
-		// create an orc
-		engine.actors.push(new Actor(x, y, 'o', "orc", TCODColor::desaturatedGreen));
-	}
-	else {
-		// create a troll
-		engine.actors.push(new Actor(x, y, 'T', "troll", TCODColor::darkerGreen));
-	}
-}
-
-//////////////////////////////////////////////////////////////////////////
 // GENERAL MAP FUNCTIONS
 
 bool Map::canWalk(int x, int y) const { 
@@ -68,7 +54,7 @@ bool Map::canWalk(int x, int y) const {
 	}
 	for (Actor **iterator = engine.actors.begin(); iterator != engine.actors.end(); iterator++) {
 		Actor *actor = *iterator;
-		if (actor->x == x && actor->y == y) {
+		if (actor->blocks && actor->x == x && actor->y == y) {
 			return false; // there is an actor here. cannot walk
 		}
 	}
@@ -76,13 +62,11 @@ bool Map::canWalk(int x, int y) const {
 }
 
 bool Map::isWall(int x, int y) const {
-	//return !tiles[x + y*width].canWalk;
 	return !map->isWalkable(x, y);
 }
 
 void Map::setWall(int x, int y) {
 	map->setProperties(x, y, false, false);
-	//tiles[x + y*width].canWalk = false;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -101,7 +85,7 @@ bool Map::isInFov(int x, int y) const {
 }
 
 void Map::computeFov() {
-	map->computeFov(engine.player->x, engine.player->y, engine.fovRadius);
+	map->computeFov(engine.player->x, engine.player->y, fov->currentFov);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -149,9 +133,31 @@ void Map::createRoom(bool first, int x1, int y1, int x2, int y2) {
 }
 
 //////////////////////////////////////////////////////////////////////////
+// MONSTER SPAWNING
+
+void Map::addMonster(int x, int y) {
+	TCODRandom *rng = TCODRandom::getInstance();
+	if (rng->getInt(0, 100) < 80) { // creates an orc in 80% of cases
+									// create an orc
+		Actor *orc = new Actor(x, y, 'c', "Orc", TCODColor::desaturatedGreen);
+		orc->destructible = new MonsterDestructible(10, 0, "dead orc");
+		orc->attacker = new Attacker(3);
+		orc->ai = new MonsterAi();
+		engine.actors.push(orc);
+	}
+	else {
+		// create a troll
+		Actor *troll = new Actor(x, y, 'T', "Troll", TCODColor::darkerGreen);
+		troll->destructible = new MonsterDestructible(16, 1, "troll carcass");
+		troll->attacker = new Attacker(5);
+		troll->ai = new MonsterAi();
+		engine.actors.push(troll);
+	}
+}
+
+//////////////////////////////////////////////////////////////////////////
 // MAP RENDERING
 
-// Scans the whole map and fills the console background color with the right colors
 void Map::render() const {
 	static const TCODColor darkWall(0, 0, 100);
 	static const TCODColor darkGround(50, 50, 150);

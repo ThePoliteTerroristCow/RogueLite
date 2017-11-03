@@ -1,7 +1,6 @@
-#pragma once
+//#pragma once
 
-#define MAINCON_TITLE "libtcod C++ tutorial"
-static const int FOV_RADIUS = 7; // Default FOV Radius. 0 for infinite.
+#define CON_MAIN_TITLE "libtcod C++ tutorial"
 
 class Engine {
 public:
@@ -13,18 +12,23 @@ public:
 		DEFEAT
 	} gameStatus;
 
+	TCOD_key_t lastKey;
 	TCODList<Actor *> actors; // List of all Actors on the map
-	int fovRadius;
 	Actor *player; // Pointer to the player actor
 	Map *map;
+	FOV *fov;
+	int screenWidth;
+	int screenHeight;
 
-	Engine();
+	Engine(int screenWidth, int screenHeight);
 	~Engine();
+	void sendToBack(Actor *actor);
 	void update();
 	void render();
 
 private:
 	bool computeFov;
+	int currentFov;
 
 protected:
 	int conEdgeX, conEdgeY;
