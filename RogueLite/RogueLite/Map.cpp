@@ -1,9 +1,5 @@
 #include "Main.h"
 
-static const int ROOM_MAX_SIZE = 12;
-static const int ROOM_MIN_SIZE = 6;
-static const int MAX_ROOM_MONSTERS = 3;
-
 class BspListener : public ITCODBspCallback {
 private:
 	Map &map; // a map to dig
@@ -70,7 +66,7 @@ void Map::addMonster(int x, int y) {
 	TCODRandom *rng = TCODRandom::getInstance();
 	if (rng->getInt(0, 100) < 80) {
 		// create an orc
-		Actor *orc = new Actor(x, y, 'o', "orc",
+		Actor *orc = new Actor(x, y, 'o', "Orc",
 			TCODColor::desaturatedGreen);
 		orc->destructible = new MonsterDestructible(10, 0, "dead orc");
 		orc->attacker = new Attacker(3);
@@ -79,7 +75,7 @@ void Map::addMonster(int x, int y) {
 	}
 	else {
 		// create a troll
-		Actor *troll = new Actor(x, y, 'T', "troll",
+		Actor *troll = new Actor(x, y, 'T', "Troll",
 			TCODColor::darkerGreen);
 		troll->destructible = new MonsterDestructible(16, 1, "troll carcass");
 		troll->attacker = new Attacker(4);
@@ -142,8 +138,7 @@ bool Map::isInFov(int x, int y) const {
 }
 
 void Map::computeFov() {
-	map->computeFov(engine.player->x, engine.player->y,
-		engine.fovRadius);
+	map->computeFov(engine.player->x, engine.player->y, fov.currentFov);
 }
 
 void Map::render() const {

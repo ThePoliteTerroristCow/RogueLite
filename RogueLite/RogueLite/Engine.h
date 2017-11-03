@@ -16,7 +16,6 @@ public:
 	TCODList<Actor *> actors; // List of all Actors on the map
 	Actor *player; // Pointer to the player actor
 	Map *map;
-	FOV *fov;
 	int screenWidth;
 	int screenHeight;
 
@@ -25,8 +24,6 @@ public:
 	void sendToBack(Actor *actor);
 	void update();
 	void render();
-
-	int fovRadius;
 
 private:
 	int startupFov;

@@ -1,5 +1,9 @@
 //#pragma once
 
+static const int ROOM_MAX_SIZE = 12;
+static const int ROOM_MIN_SIZE = 6;
+static const int MAX_ROOM_MONSTERS = 3;
+
 struct Tile {
 	bool explored; // has the player already seen this tile ?
 	Tile() : explored(false) {}

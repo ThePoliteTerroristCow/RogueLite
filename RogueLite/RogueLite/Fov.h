@@ -15,3 +15,5 @@ protected:
 	void storeFov();
 	int storedFov;
 };
+
+extern FOV fov;
