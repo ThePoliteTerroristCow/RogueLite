@@ -1,8 +1,7 @@
 #include <stdio.h>
 #include "Main.h"
 
-Destructible::Destructible(float maxHp, float defense, const char *corpseName) : maxHp(maxHp), currentHp(maxHp), defense(defense) {
-	//strcpy_s(this->corpseName, corpseName);
+Destructible::Destructible(float maxHp, float defense, const char *corpseName) : maxHp(maxHp), currentHp(maxHp), defense(defense), corpseName(corpseName) {
 }
 
 float Destructible::takeDamage(Actor *owner, float damage) {

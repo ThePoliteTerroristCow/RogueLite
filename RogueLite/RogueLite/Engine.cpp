@@ -1,13 +1,14 @@
 #include "Main.h"
 
 // CONSTRUCTOR 
-Engine::Engine(int screenWidth, int screenHeight) : gameStatus(STARTUP), currentFov(fov->setFov(7)), screenWidth(screenWidth), screenHeight(screenHeight) {
+Engine::Engine(int screenWidth, int screenHeight) : gameStatus(STARTUP), startupFov(fov.setFov(7)), screenWidth(screenWidth), screenHeight(screenHeight) {
 	TCODConsole::initRoot(screenWidth, screenHeight, CON_MAIN_TITLE, false);
 	player = new Actor(40, 25, '@', "player", TCODColor::white);
 	player->destructible = new PlayerDestructible(30, 2, "your carcass");
 	player->attacker = new Attacker(5);
 	player->ai = new PlayerAi();
 	actors.push(player);
+	map = new Map(80, 45); // Excluding this causes tragedy with nullptr's everywhere; show it some love! :D
 }
 
 // DESTRUCTOR
