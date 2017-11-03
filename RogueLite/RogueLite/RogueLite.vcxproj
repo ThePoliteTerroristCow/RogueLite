@@ -85,6 +85,7 @@
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>
       </AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>C:\Users\Tosh\Documents\Visual Studio 2015\Projects\libtcod\libtcod-1.6.3\build\msvs\libtcod\Win32\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>

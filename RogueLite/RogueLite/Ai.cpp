@@ -31,10 +31,49 @@ void PlayerAi::update(Actor *owner) {
 
 	// DEBUGGING / CHEATS
 	if (engine.lastKey.vk == TCODK_1 && engine.lastKey.rctrl && engine.lastKey.ralt) {
-		//
+		if (fov.sv.cheatsEnabled == true)
+		{
+			fov.sv.cheatsEnabled = false;
+			fov.sv.fovCheat = false;
+			fov.sv.renderCheat = false;
+			fov.sv.showPlayerPos = false;
+		}
+		else if (fov.sv.cheatsEnabled == false) {
+			fov.sv.cheatsEnabled = true;
+			fov.sv.showPlayerPos = true;
+		}
 	}
 	if (engine.lastKey.vk == TCODK_2 && engine.lastKey.rctrl && engine.lastKey.ralt) {
-		//
+		if (fov.sv.cheatsEnabled == true)
+		{
+			fov.sv.fovCheat = true;
+			fov.setFov(fov.currentFov - 1);
+			engine.map->computeFov();
+		}
+	}
+	if (engine.lastKey.vk == TCODK_3 && engine.lastKey.rctrl && engine.lastKey.ralt) {
+		if (fov.sv.cheatsEnabled == true)
+		{
+			fov.sv.fovCheat = true;
+			fov.setFov(fov.currentFov + 1);
+			engine.map->computeFov();
+		}
+	}
+	if (engine.lastKey.vk == TCODK_4 && engine.lastKey.rctrl && engine.lastKey.ralt) {
+		if (fov.sv.cheatsEnabled == true)
+		{
+			if (fov.sv.renderCheat == true) {
+				fov.sv.renderCheat = false;
+				
+			}
+			else if (fov.sv.renderCheat == false) {
+				fov.sv.renderCheat = true;
+				TCODSystem::sleepMilli(50);
+			}
+		}
+	}
+	if (fov.sv.cheatsEnabled == true && engine.lastKey.vk == TCODK_5 && engine.lastKey.rctrl && engine.lastKey.ralt) {
+		fov.sv.spawnNewDungeon();
 	}
 }
 

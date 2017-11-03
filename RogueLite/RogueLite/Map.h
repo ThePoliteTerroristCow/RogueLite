@@ -21,6 +21,7 @@ public:
 	bool canWalk(int x, int y) const;
 	void computeFov();
 	void render() const;
+	void renderCheat() const;
 
 protected:
 	Tile *tiles;

@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include "Main.h"
 
 class BspListener : public ITCODBspCallback {
@@ -139,6 +140,43 @@ bool Map::isInFov(int x, int y) const {
 
 void Map::computeFov() {
 	map->computeFov(engine.player->x, engine.player->y, fov.currentFov);
+}
+
+void Map::renderCheat() const {
+	static const TCODColor darkWall(0, 0, 0);
+	static const TCODColor lightWall(130, 110, 50);
+	static const TCODColor lightGround(200, 180, 50);
+	static const TCODColor lightRedWTF(255, 50, 50);
+
+/*
+		// array shenanigans
+		int *canWalkX = NULL, *canWalkY = NULL;
+		int xSize = width;
+		int ySize = height;
+		canWalkX = new int[xSize];
+		canWalkY = new int[ySize];
+		for (int i = 0; i < xSize; i++) { canWalkX[i] = 0; }
+		for (int i = 0; i < ySize; i++) { canWalkY[i] = 0; }
+
+		// cleanup the array when done
+		delete[] canWalkX;
+		delete[] canWalkY;
+		canWalkX = NULL;
+		canWalkY = NULL;
+*/
+
+	for (int x = 0; x < width; x++) {
+		for (int y = 0; y < height; y++) {
+			if (canWalk(x, y))
+			{
+				TCODConsole::root->setCharBackground(x, y, lightGround);
+			}
+			else if (isWall(x, y))
+			{
+				TCODConsole::root->setCharBackground(x, y, lightWall);
+			}
+		}
+	}
 }
 
 void Map::render() const {
