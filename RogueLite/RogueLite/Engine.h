@@ -26,9 +26,10 @@ public:
 	void update();
 	void render();
 
+	int fovRadius;
+
 private:
-	bool computeFov;
-	int currentFov;
+	int startupFov;
 
 protected:
 	int conEdgeX, conEdgeY;

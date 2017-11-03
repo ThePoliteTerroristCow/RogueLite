@@ -5,7 +5,7 @@ public:
 	float maxHp; 
 	float currentHp;
 	float defense;
-	char *corpseName;
+	const char *corpseName;
 
 	Destructible(float maxHp, float defense, const char *corpseName);
 	inline bool isDead() { return currentHp <= 0; }

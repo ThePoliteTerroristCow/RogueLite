@@ -15,7 +15,7 @@ int FOV::getStoredFov() {
 }
 
 int FOV::setFov(int newFov) {
-	storeFov();
+	storedFov = currentFov;
 	currentFov = newFov;
 	return currentFov;
 }

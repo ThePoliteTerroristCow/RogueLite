@@ -1,5 +1,3 @@
-#pragma once
-
 #include "libtcod.hpp"
 class Actor;
 #include "Destructible.h"
