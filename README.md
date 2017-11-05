@@ -9,7 +9,6 @@ Project Properties --> Configuration Properties --> VC++ Directories:
     Include Directories: (libtcod\libtcod-1.6.3\include)  
     Library Directories [DEBUG] (libtcod\libtcod-1.6.3\build\msvs\libtcod\Win32\Debug)  
     Library Directories [RELEASE] (libtcod\libtcod-1.6.3\build\msvs\libtcod\Win32\Release)  
-  
 	Source Directories: (libtcod\libtcod-1.6.3\src)  
   
 Project Properties --> Linker --> General:  
