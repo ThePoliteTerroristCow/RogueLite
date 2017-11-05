@@ -1,1 +1,16 @@
-﻿
+﻿  Actor.cpp
+  Ai.cpp
+Ai.cpp(119): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+  Attacker.cpp
+  Destructible.cpp
+  Engine.cpp
+  Fov.cpp
+  main.cpp
+  Map.cpp
+  Generating code
+  76 of 76 functions (100.0%) were compiled, the rest were copied from previous compilation.
+    75 functions were new in current compilation
+    0 functions had inline decision re-evaluated but remain unchanged
+  Finished generating code
+  RogueLite.vcxproj -> C:\Users\Tosh\Documents\Github\RogueLite\RogueLite\Release\RogueLite.exe
+  RogueLite.vcxproj -> C:\Users\Tosh\Documents\Github\RogueLite\RogueLite\Release\RogueLite.pdb (Full PDB)

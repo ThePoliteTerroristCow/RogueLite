@@ -1,1 +1,12 @@
-﻿
+﻿  Map.cpp
+  main.cpp
+  Fov.cpp
+  Engine.cpp
+  Destructible.cpp
+  Attacker.cpp
+  Ai.cpp
+c:\users\tosh\documents\github\roguelite\roguelite\roguelite\ai.cpp(119): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+  Actor.cpp
+  Generating Code...
+  RogueLite.vcxproj -> C:\Users\Tosh\Documents\Github\RogueLite\RogueLite\Debug\RogueLite.exe
+  RogueLite.vcxproj -> C:\Users\Tosh\Documents\Github\RogueLite\RogueLite\Debug\RogueLite.pdb (Partial PDB)

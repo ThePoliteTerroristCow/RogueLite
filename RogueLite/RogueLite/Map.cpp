@@ -142,25 +142,14 @@ void Map::computeFov() {
 	map->computeFov(engine.player->x, engine.player->y, fov.currentFov);
 }
 
-//////////////////////////////////////////////////////////////////////////
-
-void Map::generateNewDungeon(int x, int y) {
-	tiles = new Tile[width*height];
-	map = new TCODMap(width, height);
-	TCODBsp bsp(0, 0, width, height);
-	bsp.splitRecursive(NULL, 8, ROOM_MAX_SIZE, ROOM_MAX_SIZE, 1.5f, 1.5f);
-	BspListener listener(*this);
-	bsp.traverseInvertedLevelOrder(&listener, NULL);
-	Map::Map(x, y);
-}
-
 void Map::renderCheat() const {
 	static const TCODColor darkWall(0, 0, 0);
 	static const TCODColor lightWall(130, 110, 50);
 	static const TCODColor lightGround(200, 180, 50);
 	static const TCODColor lightRedWTF(255, 50, 50);
 
-/* array shenanigans
+/*
+		// array shenanigans
 		int *canWalkX = NULL, *canWalkY = NULL;
 		int xSize = width;
 		int ySize = height;
