@@ -4,3 +4,4 @@ FOV + 1       : 'RCtrl' + 'LAlt' + '3'
 Show Map      : 'RCtrl' + 'LAlt' + '4'
 New Dungeon   : 'RCtrl' + 'LAlt' + '5'
 Restart App   : 'RCtrl' + 'LAlt' + 'R'
+Close App     : 'Esc' (only works with cheats enabled)
