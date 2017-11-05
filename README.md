@@ -21,7 +21,7 @@ Project Properties --> Linker --> General:
   
   
 -- LAUNCH PREREQUISITES --  
-Place in the same directory as the main EXE file. Debug versions are in the RogueLite\Debug folder. Release versions are in the RogueLite\Release folder. You can also build these yourself by opening the libtcod.sln file (libtcod\libtcod-1.6.3\build\msvs)  
+Place in the same directory as the main EXE file. Debug & Release versions have been pre-included in their respective RogueLite\Release Type folders. You can also build these yourself by opening the libtcod.sln file (libtcod\libtcod-1.6.3\build\msvs)  
   
 --> SDL2.dll  
 --> libtcod.dll   
