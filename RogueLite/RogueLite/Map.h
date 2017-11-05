@@ -11,6 +11,8 @@ struct Tile {
 
 class Map {
 public:
+	TCODMap *map;
+	Tile *tiles;
 	int width, height;
 
 	Map(int width, int height);
@@ -22,10 +24,9 @@ public:
 	void computeFov();
 	void render() const;
 	void renderCheat() const;
+	void generateNewDungeon(int x, int y);
 
-protected:
-	Tile *tiles;
-	TCODMap *map;
+protected:	
 	friend class BspListener;
 
 	void dig(int x1, int y1, int x2, int y2);

@@ -1,0 +1,6 @@
+Enable Cheats : 'RCtrl' + 'LAlt' + '1' 
+FOV - 1       : 'RCtrl' + 'LAlt' + '2'
+FOV + 1       : 'RCtrl' + 'LAlt' + '3'
+Show Map      : 'RCtrl' + 'LAlt' + '4'
+New Dungeon   : 'RCtrl' + 'LAlt' + '5'
+Restart App   : 'RCtrl' + 'LAlt' + 'R'

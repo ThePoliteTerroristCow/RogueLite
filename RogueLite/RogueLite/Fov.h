@@ -17,12 +17,15 @@ public:
 		bool fovCheat = false;
 		bool renderCheat = false;
 		bool showPlayerPos = false;
-		void spawnNewDungeon(); // unacceptable method (creates a new process, closes current), but for now it works
+		void restart();
+		void spawnNewDungeon(int x, int y); // A bit mangled perhaps, but its much cleaner than before
 	} sv;
 
 protected:
-	void storeFov();
 	int storedFov;
+
+	void updateEngine();
+	void storeFov();
 };
 
 extern FOV fov;
