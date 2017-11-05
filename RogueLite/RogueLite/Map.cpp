@@ -45,45 +45,8 @@ Map::~Map() {
 	delete map;
 }
 
-void Map::dig(int x1, int y1, int x2, int y2) {
-	if (x2 < x1) {
-		int tmp = x2;
-		x2 = x1;
-		x1 = tmp;
-	}
-	if (y2 < y1) {
-		int tmp = y2;
-		y2 = y1;
-		y1 = tmp;
-	}
-	for (int tilex = x1; tilex <= x2; tilex++) {
-		for (int tiley = y1; tiley <= y2; tiley++) {
-			map->setProperties(tilex, tiley, true, true);
-		}
-	}
-}
-
-void Map::addMonster(int x, int y) {
-	TCODRandom *rng = TCODRandom::getInstance();
-	if (rng->getInt(0, 100) < 80) {
-		// create an orc
-		Actor *orc = new Actor(x, y, 'o', "Orc",
-			TCODColor::desaturatedGreen);
-		orc->destructible = new MonsterDestructible(10, 0, "dead orc");
-		orc->attacker = new Attacker(3);
-		orc->ai = new MonsterAi();
-		engine.actors.push(orc);
-	}
-	else {
-		// create a troll
-		Actor *troll = new Actor(x, y, 'T', "Troll",
-			TCODColor::darkerGreen);
-		troll->destructible = new MonsterDestructible(16, 1, "troll carcass");
-		troll->attacker = new Attacker(4);
-		troll->ai = new MonsterAi();
-		engine.actors.push(troll);
-	}
-}
+//////////////////////////////////////////////////////////////////////////
+// Room Creation & Regenerating Dungeons
 
 void Map::createRoom(bool first, int x1, int y1, int x2, int y2) {
 	dig(x1, y1, x2, y2);
@@ -105,6 +68,60 @@ void Map::createRoom(bool first, int x1, int y1, int x2, int y2) {
 		}
 	}
 }
+
+void Map::dig(int x1, int y1, int x2, int y2) {
+	if (x2 < x1) {
+		int tmp = x2;
+		x2 = x1;
+		x1 = tmp;
+	}
+	if (y2 < y1) {
+		int tmp = y2;
+		y2 = y1;
+		y1 = tmp;
+	}
+	for (int tilex = x1; tilex <= x2; tilex++) {
+		for (int tiley = y1; tiley <= y2; tiley++) {
+			map->setProperties(tilex, tiley, true, true);
+		}
+	}
+}
+
+void Map::generateNewDungeon(int x, int y) {
+	tiles = new Tile[width*height];
+	map = new TCODMap(width, height);
+	TCODBsp bsp(0, 0, width, height);
+	bsp.splitRecursive(NULL, 8, ROOM_MAX_SIZE, ROOM_MAX_SIZE, 1.5f, 1.5f);
+	BspListener listener(*this);
+	bsp.traverseInvertedLevelOrder(&listener, NULL);
+	Map::Map(x, y);
+}
+
+//////////////////////////////////////////////////////////////////////////
+// Adding Monsters
+
+void Map::addMonster(int x, int y) {
+	TCODRandom *rng = TCODRandom::getInstance();
+	if (rng->getInt(0, 100) < 80) {
+		// create an orc
+		Actor *orc = new Actor(x, y, 'o', "Orc", TCODColor::desaturatedGreen);
+		orc->destructible = new MonsterDestructible(10, 0, "dead orc");
+		orc->attacker = new Attacker(3);
+		orc->ai = new MonsterAi();
+		engine.actors.push(orc);
+	}
+	else {
+		// create a troll
+		Actor *troll = new Actor(x, y, 'T', "Troll", TCODColor::darkerGreen);
+		troll->destructible = new MonsterDestructible(16, 1, "troll carcass");
+		troll->attacker = new Attacker(4);
+		troll->ai = new MonsterAi();
+		engine.actors.push(troll);
+	}
+}
+
+//////////////////////////////////////////////////////////////////////////
+// Map & Fov Properties
 
 bool Map::isWall(int x, int y) const {
 	return !map->isWalkable(x, y);
@@ -143,16 +160,7 @@ void Map::computeFov() {
 }
 
 //////////////////////////////////////////////////////////////////////////
-
-void Map::generateNewDungeon(int x, int y) {
-	tiles = new Tile[width*height];
-	map = new TCODMap(width, height);
-	TCODBsp bsp(0, 0, width, height);
-	bsp.splitRecursive(NULL, 8, ROOM_MAX_SIZE, ROOM_MAX_SIZE, 1.5f, 1.5f);
-	BspListener listener(*this);
-	bsp.traverseInvertedLevelOrder(&listener, NULL);
-	Map::Map(x, y);
-}
+// Map Rendering
 
 void Map::renderCheat() const {
 	static const TCODColor darkWall(0, 0, 0);

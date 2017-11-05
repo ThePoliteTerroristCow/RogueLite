@@ -104,29 +104,45 @@ bool PlayerAi::moveOrAttack(Actor *owner, int targetX, int targetY) {
 //////////////////////////////////////////////////////////////////////////
 // MONSTER AI
 
+void MonsterAi::moveOrAttack(Actor *owner, int targetX, int targetY) {
+	int dirX = targetX - owner->x;
+	int dirY = targetY - owner->y;
+	int stepDirX = (dirX > 0 ? 1 : -1); // if (dirX > 0) stepDirX = 1; | else stepDirX = -1;
+	int stepDirY = (dirY > 0 ? 1 : -1);
+	float distance = sqrtf(dirX*dirX + dirY*dirY);
+
+	// Take the monster->player vector and normalize it (divide by its length so that its length is 1), then round 
+	// its x,y component to get an integer deplacement vector. The possible return values for dirX,dirY are -1.0 and 1
+	if (distance >= 2) {
+		dirX = (int)(round(dirX / distance));
+		dirY = (int)(round(dirY / distance));
+		if (engine.map->canWalk(owner->x + dirX, owner->y + dirY)) {
+			owner->x += dirX;
+			owner->y += dirY;
+		}
+		else if (engine.map->canWalk(owner->x + stepDirX, owner->y)) {
+			owner->x += stepDirX;
+		}
+		else if (engine.map->canWalk(owner->x, owner->y + stepDirY)) {
+			owner->y += stepDirY;
+		}
+	}
+	else if (owner->attacker) {
+		owner->attacker->attack(owner, engine.player);
+	}
+}
+
 void MonsterAi::update(Actor *owner) {
 	if (owner->destructible && owner->destructible->isDead()) {
 		return;
 	}
 	if (engine.map->isInFov(owner->x, owner->y)) {
 		// we can see the player & can move towards him
+		moveCount = TRACKING_TURNS;
+	} 
+	else moveCount--;
+	
+	if (moveCount > 0) {
 		moveOrAttack(owner, engine.player->x, engine.player->y);
-	}
-}
-
-void MonsterAi::moveOrAttack(Actor *owner, int targetX, int targetY) {
-	int dirX = targetX - owner->x;
-	int dirY = targetY - owner->y;
-	float distance = sqrtf(dirX*dirX + dirY*dirY);
-
-	// Take the monster->player vector and normalize it (divide by its length so that its length is 1), then
-	//round its x,y component to get an integer deplacement vector. The possible return values for dirX,dirY 
-	// are -1.0 and 1, the distance needed to determine if we're in melee range or not.
-	if (distance >= 2) {
-		dirX = (int)(round(dirX / distance));
-		dirY = (int)(round(dirY / distance));
-	}
-	else if (owner->attacker) {
-		owner->attacker->attack(owner, engine.player); // If we're in melee range & have an attack feature then attack the player!
 	}
 }
