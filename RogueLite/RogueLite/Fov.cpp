@@ -54,6 +54,22 @@ void FOV::CheatStatus::spawnNewDungeon(int x, int y) {
 	engine.actors.clear();
 	engine.map->map->clear(true, false);
 	engine.map->generateNewDungeon(x, y);
+
+	// Place the player into the nearest room if spawned inside a wall
+	int playerX = engine.player->x;
+	int playerY = engine.player->y;
+	if (engine.map->canWalk(playerX, playerY) == false) {
+		for (int iX = playerX; iX < x; iX++) {
+			for (int iY = playerY; iY < y; iY++) {
+				if (engine.map->canWalk(iX, iY)) {
+					engine.player->x = iX;
+					engine.player->y = iY;
+					engine.player->render();
+				}
+			}
+		}
+	}
+
 	engine.gameStatus = Engine::STARTUP;
 	engine.update();
 	engine.render();
