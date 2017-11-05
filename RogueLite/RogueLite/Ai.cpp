@@ -31,52 +31,50 @@ void PlayerAi::update(Actor *owner) {
 	if (engine.lastKey.vk == TCODK_ESCAPE) { if (TCODConsole::isFullscreen()) { TCODConsole::setFullscreen(false); } }
 
 	// DEBUGGING / CHEATS
-	if (engine.lastKey.vk == TCODK_ESCAPE && fov.sv.cheatsEnabled == 1) ExitProcess(0);
-	if (engine.lastKey.c == 'r' && engine.lastKey.rctrl && engine.lastKey.ralt && fov.sv.cheatsEnabled == 1) fov.sv.restart();
+	if (engine.lastKey.vk == TCODK_ESCAPE && cheats.sv.cheatsEnabled == 1) ExitProcess(0);
+	if (engine.lastKey.c == 'r' && engine.lastKey.rctrl && engine.lastKey.ralt && cheats.sv.cheatsEnabled == 1) cheats.restartApp("RogueLite.exe");
 	if (engine.lastKey.vk == TCODK_1 && engine.lastKey.rctrl && engine.lastKey.ralt) {
-		if (fov.sv.cheatsEnabled == true)
+		if (cheats.sv.cheatsEnabled == true)
 		{
-			fov.sv.cheatsEnabled = false;
-			fov.sv.fovCheat = false;
-			fov.sv.renderCheat = false;
-			fov.sv.showPlayerPos = false;
+			cheats.sv.cheatsEnabled = false;
+			cheats.sv.fovCheat = false;
+			cheats.sv.renderCheat = false;
+			cheats.sv.showPlayerPos = false;
 		}
-		else if (fov.sv.cheatsEnabled == false) {
-			fov.sv.cheatsEnabled = true;
-			fov.sv.showPlayerPos = true;
+		else if (cheats.sv.cheatsEnabled == false) {
+			cheats.sv.cheatsEnabled = true;
+			cheats.sv.showPlayerPos = true;
 		}
 	}
 	if (engine.lastKey.vk == TCODK_2 && engine.lastKey.rctrl && engine.lastKey.ralt) {
-		if (fov.sv.cheatsEnabled == true)
+		if (cheats.sv.cheatsEnabled == true)
 		{
-			fov.sv.fovCheat = true;
+			cheats.sv.fovCheat = true;
 			fov.setFov(fov.currentFov - 1);
 			engine.map->computeFov();
 		}
 	}
 	if (engine.lastKey.vk == TCODK_3 && engine.lastKey.rctrl && engine.lastKey.ralt) {
-		if (fov.sv.cheatsEnabled == true)
+		if (cheats.sv.cheatsEnabled == true)
 		{
-			fov.sv.fovCheat = true;
+			cheats.sv.fovCheat = true;
 			fov.setFov(fov.currentFov + 1);
 			engine.map->computeFov();
 		}
 	}
 	if (engine.lastKey.vk == TCODK_4 && engine.lastKey.rctrl && engine.lastKey.ralt) {
-		if (fov.sv.cheatsEnabled == true)
+		if (cheats.sv.cheatsEnabled == true)
 		{
-			if (fov.sv.renderCheat == true) {
-				fov.sv.renderCheat = false;
-				
+			if (cheats.sv.renderCheat == true) {
+				cheats.sv.renderCheat = false;
 			}
-			else if (fov.sv.renderCheat == false) {
-				fov.sv.renderCheat = true;
-				TCODSystem::sleepMilli(50);
+			else if (cheats.sv.renderCheat == false) {
+				cheats.sv.renderCheat = true;
 			}
 		}
 	}
-	if (fov.sv.cheatsEnabled == true && engine.lastKey.vk == TCODK_5 && engine.lastKey.rctrl && engine.lastKey.ralt) {
-		fov.sv.spawnNewDungeon(80, 45);
+	if (cheats.sv.cheatsEnabled == true && engine.lastKey.vk == TCODK_5 && engine.lastKey.rctrl && engine.lastKey.ralt) {
+		cheats.spawnNewDungeon(80, 45);
 	}
 }
 

@@ -50,7 +50,7 @@ void Engine::render() {
 	//conEdgeY = (TCODConsole::root->getHeight() - 1);
 	
 	//Draw the map
-	if (fov.sv.renderCheat == true) {
+	if (cheats.sv.renderCheat == true) {
 		TCODConsole::root->print(screenWidth - 21, screenHeight - 2, "-- MAP VIS: ON");
 		map->renderCheat();
 	} 
@@ -67,9 +67,9 @@ void Engine::render() {
 	// Render Player, stats, etc
 	player->render();
 	TCODConsole::root->print(1, screenHeight - 1, "HP: %d/%d", (int)player->destructible->currentHp, (int)player->destructible->maxHp);
-	if (fov.sv.cheatsEnabled == true) TCODConsole::root->print(screenWidth - 21, screenHeight - 6, "-- Cheats Enabled --");
-	if (fov.sv.fovCheat == true) TCODConsole::root->print(engine.screenWidth - 21, screenHeight - 4, "-- FOV: %d", (int)fov.currentFov);
-	if (fov.sv.showPlayerPos == true) {
+	if (cheats.sv.cheatsEnabled == true) TCODConsole::root->print(screenWidth - 21, screenHeight - 6, "-- Cheats Enabled --");
+	if (cheats.sv.fovCheat == true) TCODConsole::root->print(engine.screenWidth - 21, screenHeight - 4, "-- FOV: %d", (int)fov.currentFov);
+	if (cheats.sv.showPlayerPos == true) {
 		TCODConsole::root->print(1, engine.screenHeight - 6, "Player X: %d", (int)engine.player->x);
 		TCODConsole::root->print(1, engine.screenHeight - 4, "Player Y: %d", (int)engine.player->y);
 	}

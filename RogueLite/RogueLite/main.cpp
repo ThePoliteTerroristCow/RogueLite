@@ -1,5 +1,6 @@
 #include "Main.h"
 
+Cheats cheats;
 Engine engine(80, 50);
 FOV fov;
 
