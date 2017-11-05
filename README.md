@@ -6,15 +6,15 @@ Debug and Release builds of whatever I'm working on are in their respective \Rog
 The following project properties must be modified to point to the correct locations in the included \libtcod\ folder. Their locations must also be modified according to the Configuration Mode (ie Release Mode, Debug Mode)  
   
 Project Properties --> Configuration Properties --> VC++ Directories:  
-	Include Directories: (libtcod\libtcod-1.6.3\include)  
-	Library Directories [DEBUG] (libtcod\libtcod-1.6.3\build\msvs\libtcod\Win32\Debug)  
-	Library Directories [RELEASE] (libtcod\libtcod-1.6.3\build\msvs\libtcod\Win32\Release)  
+    Include Directories: (libtcod\libtcod-1.6.3\include)  
+    Library Directories [DEBUG] (libtcod\libtcod-1.6.3\build\msvs\libtcod\Win32\Debug)  
+    Library Directories [RELEASE] (libtcod\libtcod-1.6.3\build\msvs\libtcod\Win32\Release)  
   
 	Source Directories: (libtcod\libtcod-1.6.3\src)  
   
 Project Properties --> Linker --> General:  
-	Additional Library Directories [DEBUG] (libtcod\libtcod-1.6.3\build\msvs\libtcod\Win32\Release)  
-	Additional Library Directories [RELEASE] (libtcod\libtcod-1.6.3\build\msvs\libtcod\Win32\Debug)  
+    Additional Library Directories [DEBUG] (libtcod\libtcod-1.6.3\build\msvs\libtcod\Win32\Release)  
+    Additional Library Directories [RELEASE] (libtcod\libtcod-1.6.3\build\msvs\libtcod\Win32\Debug)  
   
   
 -- LAUNCH PREREQUISITES --  
@@ -22,5 +22,5 @@ Place in the same directory as the main EXE file. Debug versions are in the Rogu
   
 --> SDL2.dll  
 --> libtcod.dll   
---> libtcod-gui.dll   
+--> libtcod-gui.dll  
 --> terminal.png  
