@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <math.h>
+#include <Windows.h>
 #include "Main.h"
 
 //////////////////////////////////////////////////////////////////////////
@@ -30,6 +31,8 @@ void PlayerAi::update(Actor *owner) {
 	if (engine.lastKey.vk == TCODK_ESCAPE) { if (TCODConsole::isFullscreen()) { TCODConsole::setFullscreen(false); } }
 
 	// DEBUGGING / CHEATS
+	if (engine.lastKey.vk == TCODK_ESCAPE && fov.sv.cheatsEnabled == 1) ExitProcess(0);
+	if (engine.lastKey.c == 'r' && engine.lastKey.rctrl && engine.lastKey.ralt && fov.sv.cheatsEnabled == 1) fov.sv.restart();
 	if (engine.lastKey.vk == TCODK_1 && engine.lastKey.rctrl && engine.lastKey.ralt) {
 		if (fov.sv.cheatsEnabled == true)
 		{
@@ -73,7 +76,7 @@ void PlayerAi::update(Actor *owner) {
 		}
 	}
 	if (fov.sv.cheatsEnabled == true && engine.lastKey.vk == TCODK_5 && engine.lastKey.rctrl && engine.lastKey.ralt) {
-		fov.sv.spawnNewDungeon();
+		fov.sv.spawnNewDungeon(80, 45);
 	}
 }
 

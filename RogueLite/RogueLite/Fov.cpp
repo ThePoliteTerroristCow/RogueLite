@@ -28,7 +28,15 @@ void FOV::storeFov() {
 	storedFov = currentFov;
 }
 
-void FOV::CheatStatus::spawnNewDungeon() {
+//////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+
+void FOV::updateEngine() {
+	engine.update();
+	engine.render();
+}
+
+void FOV::CheatStatus::restart() {
 	STARTUPINFOA si;
 	PROCESS_INFORMATION pi;
 	memset(&si, 0, sizeof(si));
@@ -40,4 +48,13 @@ void FOV::CheatStatus::spawnNewDungeon() {
 		printf("Error starting process!\n");
 	}
 	else ExitProcess(0);
+}
+
+void FOV::CheatStatus::spawnNewDungeon(int x, int y) {
+	engine.actors.clear();
+	engine.map->map->clear(true, false);
+	engine.map->generateNewDungeon(x, y);
+	engine.gameStatus = Engine::STARTUP;
+	engine.update();
+	engine.render();
 }
