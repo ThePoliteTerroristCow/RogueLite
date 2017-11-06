@@ -74,7 +74,7 @@ void PlayerAi::update(Actor *owner) {
 		}
 	}
 	if (cheats.sv.cheatsEnabled == true && engine.lastKey.vk == TCODK_5 && engine.lastKey.rctrl && engine.lastKey.ralt) {
-		cheats.spawnNewDungeon(80, 45);
+		cheats.spawnNewDungeon(80, 43);
 	}
 }
 

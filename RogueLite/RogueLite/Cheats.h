@@ -2,6 +2,8 @@
 
 class Cheats {
 public:
+	TCODList<Actor *> actors; // List of all Actors on the map
+
 	struct CheatStatus {
 	public:
 		bool cheatsEnabled = false;

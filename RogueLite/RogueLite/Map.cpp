@@ -88,9 +88,12 @@ void Map::dig(int x1, int y1, int x2, int y2) {
 }
 
 void Map::generateNewDungeon(int x, int y) {
-	tiles = new Tile[width*height];
-	map = new TCODMap(width, height);
-	TCODBsp bsp(0, 0, width, height);
+	// Cant use original width & height values declared in Map.h; Doing so leads to crashing, hence the use of x & y.
+	// pretty sure its because they aren't properly initialized which leads to invalid values being passed. 
+
+	tiles = new Tile[x*y];
+	map = new TCODMap(x, y);
+	TCODBsp bsp(0, 0, x, y);
 	bsp.splitRecursive(NULL, 8, ROOM_MAX_SIZE, ROOM_MAX_SIZE, 1.5f, 1.5f);
 	BspListener listener(*this);
 	bsp.traverseInvertedLevelOrder(&listener, NULL);

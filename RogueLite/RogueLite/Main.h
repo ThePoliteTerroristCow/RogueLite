@@ -6,5 +6,6 @@ class Actor;
 #include "Ai.h"
 #include "Actor.h"
 #include "Fov.h"
+#include "Gui.h"
 #include "Map.h"
 #include "Engine.h"

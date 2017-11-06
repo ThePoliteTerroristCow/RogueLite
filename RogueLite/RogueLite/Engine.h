@@ -15,7 +15,9 @@ public:
 	TCOD_key_t lastKey;
 	TCODList<Actor *> actors; // List of all Actors on the map
 	Actor *player; // Pointer to the player actor
+	Gui *gui;
 	Map *map;
+
 	int screenWidth;
 	int screenHeight;
 
