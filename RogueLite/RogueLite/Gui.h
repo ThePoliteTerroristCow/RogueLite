@@ -20,11 +20,22 @@ public:
 		}health;
 	}ui;
 
+	void message(const TCODColor &col, const char *text, ...);
 	void render();
 
 protected:
+	struct Message {
+		char *text;
+		TCODColor col;
+		Message(const char *text, const TCODColor &col);
+		~Message();
+	};
+	TCODList<Message *> log;
+
+	TCODConsole *msgCon;
 	TCODConsole *healthCon;
 	TCODConsole *cheatsCon;
-	void renderHealthBar(int x, int y, int width, const char *name, float value, float maxValue, const TCODColor &barColor, const TCODColor &backColor);
 	void renderCheatBar(int x, int y, int width, const char *name, const TCODColor &backColor);
+	void renderHealthBar(int x, int y, int width, const char *name, float value, float maxValue, const TCODColor &barColor, const TCODColor &backColor);
+	void renderMsgBox(int x, int y, int width, bool centerText, const TCODColor &backColor);
 };

@@ -92,7 +92,7 @@ bool PlayerAi::moveOrAttack(Actor *owner, int targetX, int targetY) {
 	for (Actor **iterator = engine.actors.begin(); iterator != engine.actors.end(); iterator++) {
 		Actor *actor = *iterator;
 		if (actor->destructible && actor->destructible->isDead() && actor->x == targetX && actor->y == targetY) {
-			printf("There's a %s here\n", actor->name);
+			engine.gui->message(TCODColor::lightGrey, "There's a %s here", actor->name);
 		}
 	}
 	// return true to update the field of view

@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <chrono>
 #include "Main.h"
 
 // CONSTRUCTOR 
@@ -47,9 +48,7 @@ void Engine::update() {
 void Engine::render() {
 	TCODConsole::root->clear();
 
-	// Get console edges
-	//conEdgeX = (TCODConsole::root->getWidth() - 1);
-	//conEdgeY = (TCODConsole::root->getHeight() - 1);
+//	gui->message(TCODColor::lightCyan, "Welcome! Prepare to die! :)");
 	
 	//Draw the map
 	if (cheats.sv.renderCheat == true) {
