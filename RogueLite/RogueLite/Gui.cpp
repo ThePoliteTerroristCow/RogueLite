@@ -1,14 +1,12 @@
 #include <stdio.h>
 #include <stdarg.h>
+#include <string>
 #include "Main.h"
-
-static const int MSG_X = 1;
-static const int MSG_HEIGHT = 4;
 
 Gui::Gui() {
 	cheatsCon = new TCODConsole((engine.screenWidth - 2) - ui.cheats.CHEAT_WIDTH, ui.cheats.CHEAT_TOP);
 	healthCon = new TCODConsole(engine.screenWidth, ui.health.HEALTH_TOP);
-	msgCon = new TCODConsole(engine.screenWidth, MSG_HEIGHT);
+	msgCon = new TCODConsole(engine.screenWidth, 4);
 }
 
 Gui::~Gui() {
@@ -18,14 +16,8 @@ Gui::~Gui() {
 	log.clearAndDelete();
 }
 
-Gui::Message::Message(const char *text, const TCODColor &col) :
-	col(col) {
-	this->text = new char[strlen(text)];
-	strcpy(this->text, text);
-}
-Gui::Message::~Message() {
-	delete[] text;
-}
+Gui::Message::Message(const char *text, const TCODColor &col) : text(_strdup(text)), col(col) {}
+Gui::Message::~Message() { free(text); }
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -38,15 +30,15 @@ void Gui::message(const TCODColor &col, const char *text, ...) {
 
 	char *lineBegin = buf;
 	char *lineEnd;
-
 	do {
 		// make room for the new message
-		if (log.size() == MSG_HEIGHT) {
+		if (log.size() == 1) {
 			Message *toRemove = log.get(0);
 			log.remove(toRemove);
-//			delete toRemove;
+			delete toRemove;
 		}
-		// detect manually declared end of line
+
+		// detect end of the line
 		lineEnd = strchr(lineBegin, '\n');
 		if (lineEnd) {
 			*lineEnd = '\0';
@@ -54,7 +46,7 @@ void Gui::message(const TCODColor &col, const char *text, ...) {
 		// add a new message to the log
 		Message *msg = new Message(lineBegin, col);
 		log.push(msg);
-		// go to the next line
+		// go to next line
 		lineBegin = lineEnd + 1;
 	} while (lineEnd);
 }
@@ -66,6 +58,14 @@ void Gui::render() {
 	renderHealthBar(1, 1, ui.health.HEALTH_WIDTH, ui.health.HEALTH_NAME, engine.player->destructible->currentHp, engine.player->destructible->maxHp, TCODColor::lightRed, TCODColor::darkerRed);
 	TCODConsole::blit(healthCon, 0, 0, engine.screenWidth, ui.health.HEALTH_TOP, TCODConsole::root, 0, engine.screenHeight - ui.health.HEALTH_TOP);
 
+	// draw the messages UI
+	if (bSetMsgBoxXY == false) setMsgBoxXY();
+	msgCon->setDefaultBackground(TCODColor::black);
+	msgCon->clear();
+	renderMsgBox(1, 1, ui.msgFrame.MSG_WIDTH, ui.msgFrame.MSG_HEIGHT);
+	renderMouseLook();
+	TCODConsole::blit(msgCon, 0, 0, ui.msgFrame.MSG_WIDTH, ui.msgFrame.MSG_HEIGHT, TCODConsole::root, ui.msgFrame.MSG_LEFTX, ui.msgFrame.MSG_TOP);
+
 	// draw the cheats UI
 	if (cheats.sv.cheatsEnabled == true) {
 		cheatsCon->setDefaultBackground(TCODColor::black);
@@ -73,12 +73,6 @@ void Gui::render() {
 		renderCheatBar(1, 1, ui.cheats.CHEAT_WIDTH, ui.cheats.CHEAT_NAME, TCODColor::darkGrey);
 		TCODConsole::blit(cheatsCon, 0, 0, engine.screenWidth, ui.cheats.CHEAT_TOP, TCODConsole::root, (engine.screenWidth - 2) - ui.cheats.CHEAT_WIDTH, engine.screenHeight - ui.cheats.CHEAT_TOP);
 	}
-
-	// draw the messages UI
-	//msgCon->setDefaultBackground(TCODColor::black);
-	//msgCon->clear();
-	//renderMsgBox(1, 1, engine.screenWidth, true, TCODColor::black);
-	//TCODConsole::blit(msgCon, 0, 0, engine.screenWidth, 3, TCODConsole::root, 0, 1);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -95,6 +89,7 @@ void Gui::renderCheatBar(int x, int y, int width, const char *name, const TCODCo
 	}
 	if (cheats.sv.fovCheat == true) cheatsCon->printEx(x, y + 3, TCOD_BKGND_NONE, TCOD_LEFT, "FOV: %i", fov.currentFov);
 	if (cheats.sv.renderCheat == true) cheatsCon->printEx(x, y + 4, TCOD_BKGND_NONE, TCOD_LEFT, "MAP VIS: ON");
+	if (cheats.sv.bGodmode == true) cheatsCon->printEx(x, y + 5, TCOD_BKGND_NONE, TCOD_LEFT, "GODMODE: ON");
 }
 
 void Gui::renderHealthBar(int x, int y, int width, const char *name, float value, float maxValue, const TCODColor &barColor, const TCODColor &backColor) {
@@ -109,24 +104,79 @@ void Gui::renderHealthBar(int x, int y, int width, const char *name, float value
 	// print text on top of the bar
 	healthCon->setDefaultForeground(TCODColor::white);
 	healthCon->printEx(x, y, TCOD_BKGND_NONE, TCOD_LEFT, "%s: %g/%g", name, value, maxValue);
+	healthCon->printEx(x, y + 1, TCOD_BKGND_NONE, TCOD_LEFT, "FPS: %f", engine.fFrameRate);
 }
 
-void Gui::renderMsgBox(int x, int y, int width, bool centerText, const TCODColor &backColor) {
-	int currentLine = 1;
-	float colorCoef = 0.4f;
+void Gui::renderMouseLook() {
+	if (!engine.map->isInFov(engine.mouse.cx, engine.mouse.cy)) {
+		// if mouse is out of fov
+		return;
+	}
+
+	std::string strName;
+	for (Actor **iterator = engine.actors.begin(); iterator != engine.actors.end(); iterator++) {
+		Actor *actor = *iterator;
+		if (actor->x == engine.mouse.cx && actor->y == engine.mouse.cy) {
+			// discard if hovering over player
+			if (actor == engine.player) return;
+
+			// early return if actor is dead
+			if (actor->destructible->isDead()) {
+				std::string strCorpseName = actor->destructible->corpseName;
+				msgCon->clear();
+				msgCon->printRect(1, 1, ui.msgFrame.MSG_WIDTH, ui.msgFrame.MSG_HEIGHT, strCorpseName.c_str());
+				return;
+			}
+
+			// truncate any floating points 
+			int truncCurrentHP = (int)(100 * actor->destructible->currentHp) / 100.0;
+			int truncMaxHP = (int)(100 * actor->destructible->maxHp) / 100.0;
+			int truncATK = (int)(100 * actor->attacker->power) / 100.0;
+			int truncDEF = (int)(100 * actor->destructible->defense) / 100.0;
+
+			// store & append actor attributes
+			strName = actor->name;
+			strName.append(":\nHP: ");
+			strName.append(std::to_string(truncCurrentHP));
+			strName.append("/");
+			strName.append(std::to_string(truncMaxHP));
+			strName.append("\nATK: ");
+			strName.append(std::to_string(truncATK));
+			strName.append(" | DEF: ");
+			strName.append(std::to_string(truncDEF));
+		}
+	}
+	msgCon->setDefaultForeground(TCODColor::white);
+	msgCon->clear();
+	msgCon->printRect(1, 1, ui.msgFrame.MSG_WIDTH, ui.msgFrame.MSG_HEIGHT, strName.c_str());
+}
+
+void Gui::renderMsgBox(int x, int y, int width, int height) {
+	TCODColor &backColor = TCODConsole::root->getDefaultBackground();
 	msgCon->setDefaultBackground(backColor);
+
+	// draw the message log
+	int msgLine = 1;
+	float colorCoef = 0.4f;
 	for (Message **it = log.begin(); it != log.end(); it++) {
 		Message *message = *it;
 		msgCon->setDefaultForeground(message->col * colorCoef);
-		msgCon->setDefaultBackground(message->col);
-		if (centerText == true || centerText == false) { // change this later obviously
-			msgCon->print(MSG_X, currentLine, message->text);
-		}
-		currentLine++;
+		msgCon->printRect(x, y, width, height, message->text);
+		msgLine++;
 		if (colorCoef < 1.0f) {
 			colorCoef += 0.3f;
 		}
 	}
+}
+
+void Gui::setMsgBoxXY() {
+	bSetMsgBoxXY = true;
+	const int x1 = engine.screenWidth - ui.cheats.CHEAT_WIDTH - 2;
+	const int x2 = engine.screenWidth - ui.health.HEALTH_WIDTH - 1;
+	ui.msgFrame.MSG_TOP = engine.screenHeight - ui.health.HEALTH_TOP;
+	ui.msgFrame.MSG_HEIGHT = (engine.screenHeight + ui.cheats.CHEAT_HEIGHT) - engine.screenHeight;
+	ui.msgFrame.MSG_LEFTX = ui.health.HEALTH_WIDTH + 1;
+	ui.msgFrame.MSG_WIDTH = (x1 + x2) - engine.screenWidth;
 }
 
 //////////////////////////////////////////////////////////////////////////

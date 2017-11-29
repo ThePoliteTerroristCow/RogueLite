@@ -31,8 +31,26 @@ void PlayerAi::update(Actor *owner) {
 	if (engine.lastKey.vk == TCODK_ESCAPE) { if (TCODConsole::isFullscreen()) { TCODConsole::setFullscreen(false); } }
 
 	// DEBUGGING / CHEATS
-	if (engine.lastKey.vk == TCODK_ESCAPE && cheats.sv.cheatsEnabled == 1) ExitProcess(0);
-	if (engine.lastKey.c == 'r' && engine.lastKey.rctrl && engine.lastKey.ralt && cheats.sv.cheatsEnabled == 1) cheats.restartApp("RogueLite.exe");
+	if (engine.lastKey.c == 'i' && engine.lastKey.rctrl && engine.lastKey.ralt && cheats.sv.cheatsEnabled == 1) {
+		if (cheats.sv.bGodmode == true) cheats.sv.bGodmode = false;
+		else {
+			cheats.sv.bGodmode = true;
+			cheats.setMaxHealth(engine.player);
+		}
+	}
+	if (engine.lastKey.c == 'n' && engine.lastKey.rctrl && engine.lastKey.ralt && cheats.sv.cheatsEnabled == 1) {
+		if (cheats.sv.bNoclip == true) {
+			cheats.sv.bNoclip = false;
+			printf("Noclip disabled\n");
+		}
+		else {
+			cheats.sv.bNoclip = true;
+			printf("Noclip enabled\n");
+		}
+	}
+	if (engine.lastKey.c == 'r' && engine.lastKey.rctrl && engine.lastKey.ralt && cheats.sv.cheatsEnabled == 1) {
+		cheats.restartApp(NULL);
+	}
 	if (engine.lastKey.vk == TCODK_1 && engine.lastKey.rctrl && engine.lastKey.ralt) {
 		if (cheats.sv.cheatsEnabled == true)
 		{
@@ -40,6 +58,8 @@ void PlayerAi::update(Actor *owner) {
 			cheats.sv.fovCheat = false;
 			cheats.sv.renderCheat = false;
 			cheats.sv.showPlayerPos = false;
+			cheats.sv.bGodmode = false;
+			cheats.sv.bNoclip = false;
 		}
 		else if (cheats.sv.cheatsEnabled == false) {
 			cheats.sv.cheatsEnabled = true;
@@ -67,6 +87,7 @@ void PlayerAi::update(Actor *owner) {
 		{
 			if (cheats.sv.renderCheat == true) {
 				cheats.sv.renderCheat = false;
+				engine.map->renderCheat();
 			}
 			else if (cheats.sv.renderCheat == false) {
 				cheats.sv.renderCheat = true;
@@ -74,11 +95,20 @@ void PlayerAi::update(Actor *owner) {
 		}
 	}
 	if (cheats.sv.cheatsEnabled == true && engine.lastKey.vk == TCODK_5 && engine.lastKey.rctrl && engine.lastKey.ralt) {
-		cheats.spawnNewDungeon(80, 43);
+		cheats.spawnNewDungeon(engine.map->width, engine.map->height);
 	}
 }
 
 bool PlayerAi::moveOrAttack(Actor *owner, int targetX, int targetY) {
+	// Force ourselves forwards if our TargetX/Y is a wall & noclip is enabled
+	if (cheats.sv.bNoclip == true) {
+		if (engine.map->isWall(targetX, targetY)) {
+			owner->x = targetX;
+			owner->y = targetY;
+			return true;
+		}
+	}
+
 	if (engine.map->isWall(targetX, targetY)) return false;
 	// look for living actors to attack
 	for (Actor **iterator = engine.actors.begin(); iterator != engine.actors.end(); iterator++) {
@@ -92,7 +122,7 @@ bool PlayerAi::moveOrAttack(Actor *owner, int targetX, int targetY) {
 	for (Actor **iterator = engine.actors.begin(); iterator != engine.actors.end(); iterator++) {
 		Actor *actor = *iterator;
 		if (actor->destructible && actor->destructible->isDead() && actor->x == targetX && actor->y == targetY) {
-			engine.gui->message(TCODColor::lightGrey, "There's a %s here", actor->name);
+			//engine.gui->message(TCODColor::lightGrey, "There's a %s here", actor->name);
 		}
 	}
 	// return true to update the field of view

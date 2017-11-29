@@ -8,7 +8,7 @@ public:
 	struct uiData {
 		struct uiCheats {
 			int CHEAT_TOP = 7; // Where the top-most part of the UI starts
-			int CHEAT_HEIGHT = 5; // The total height of the UI Element 
+			int CHEAT_HEIGHT = 6; // The total height of the UI Element 
 			int CHEAT_WIDTH = 20; // The total width of the UI Element 
 			const char *CHEAT_NAME = "-- Cheats Enabled --";
 		}cheats;
@@ -18,6 +18,13 @@ public:
 			int HEALTH_WIDTH = 20;
 			const char *HEALTH_NAME = "HP";
 		}health;
+
+		struct uiMsgFrame {
+			int MSG_HEIGHT;
+			int MSG_LEFTX;
+			int MSG_TOP;
+			int MSG_WIDTH;
+		}msgFrame;
 	}ui;
 
 	void message(const TCODColor &col, const char *text, ...);
@@ -37,5 +44,9 @@ protected:
 	TCODConsole *cheatsCon;
 	void renderCheatBar(int x, int y, int width, const char *name, const TCODColor &backColor);
 	void renderHealthBar(int x, int y, int width, const char *name, float value, float maxValue, const TCODColor &barColor, const TCODColor &backColor);
-	void renderMsgBox(int x, int y, int width, bool centerText, const TCODColor &backColor);
+	void renderMouseLook();
+	void renderMsgBox(int x, int y, int width, int height);
+	
+	bool bSetMsgBoxXY = false; // used to prevent repeated calling of 'setMsgBoxXY()'
+	void setMsgBoxXY();
 };

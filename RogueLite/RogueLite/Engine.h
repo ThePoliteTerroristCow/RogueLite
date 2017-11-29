@@ -13,11 +13,13 @@ public:
 	} gameStatus;
 
 	TCOD_key_t lastKey;
+	TCOD_mouse_t mouse;
 	TCODList<Actor *> actors; // List of all Actors on the map
 	Actor *player; // Pointer to the player actor
 	Gui *gui;
 	Map *map;
 
+	float fFrameRate;
 	int screenWidth;
 	int screenHeight;
 
@@ -31,7 +33,8 @@ private:
 	int startupFov;
 
 protected:
-	int conEdgeX, conEdgeY;
+	int mapHeight = map->height;
+	int mapWidth = map->width;
 };
 
 extern Engine engine;

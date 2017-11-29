@@ -5,6 +5,14 @@ Destructible::Destructible(float maxHp, float defense, const char *corpseName) :
 }
 
 float Destructible::takeDamage(Actor *owner, float damage) {
+	// Circumvent damage if Godmode is active
+	if (cheats.sv.bGodmode == true) {
+		if (owner == engine.player) {
+			cheats.setMaxHealth(engine.player);
+			return damage - damage;
+		}
+	}
+
 	damage -= defense;
 	if (damage > 0) {
 		currentHp -= damage;
@@ -42,6 +50,12 @@ PlayerDestructible::PlayerDestructible(float maxHp, float defense, const char *c
 {}
 
 void PlayerDestructible::die(Actor *owner) {
+	// Circumvent death if Godmode is active
+	if (cheats.sv.bGodmode == true) {
+		engine.player->destructible->currentHp = engine.player->destructible->maxHp;
+		return;
+	}
+
 	engine.gui->message(TCODColor::red, "You died!");
 	Destructible::die(owner);
 	engine.gameStatus = Engine::DEFEAT;

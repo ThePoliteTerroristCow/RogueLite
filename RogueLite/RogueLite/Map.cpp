@@ -108,7 +108,7 @@ void Map::addMonster(int x, int y) {
 	if (rng->getInt(0, 100) < 80) {
 		// create an orc
 		Actor *orc = new Actor(x, y, 'o', "Orc", TCODColor::desaturatedGreen);
-		orc->destructible = new MonsterDestructible(10, 0, "dead orc");
+		orc->destructible = new MonsterDestructible(10, 0, "Dead orc");
 		orc->attacker = new Attacker(3);
 		orc->ai = new MonsterAi();
 		engine.actors.push(orc);
@@ -116,7 +116,7 @@ void Map::addMonster(int x, int y) {
 	else {
 		// create a troll
 		Actor *troll = new Actor(x, y, 'T', "Troll", TCODColor::darkerGreen);
-		troll->destructible = new MonsterDestructible(16, 1, "troll carcass");
+		troll->destructible = new MonsterDestructible(16, 1, "Troll carcass");
 		troll->attacker = new Attacker(4);
 		troll->ai = new MonsterAi();
 		engine.actors.push(troll);
@@ -151,11 +151,24 @@ bool Map::isExplored(int x, int y) const {
 }
 
 bool Map::isInFov(int x, int y) const {
+	if (x < 0 || x >= width || y < 0 || y >= height) {
+		return false;
+	}
 	if (map->isInFov(x, y)) {
 		tiles[x + y*width].explored = true;
 		return true;
 	}
 	return false;
+}
+
+void Map::clearExplored(int x, int y) {
+	for (int i = 0; i < x; i++) {
+		for (int i = 0; i < y; i++) {
+			if (isExplored(x, y) == true) {
+				tiles[x + y*width].explored = false;
+			}
+		}
+	}
 }
 
 void Map::computeFov() {
@@ -166,37 +179,47 @@ void Map::computeFov() {
 // Map Rendering
 
 void Map::renderCheat() const {
-	static const TCODColor darkWall(0, 0, 0);
 	static const TCODColor lightWall(130, 110, 50);
 	static const TCODColor lightGround(200, 180, 50);
-	static const TCODColor lightRedWTF(255, 50, 50);
 
-/* array shenanigans
-		int *canWalkX = NULL, *canWalkY = NULL;
-		int xSize = width;
-		int ySize = height;
-		canWalkX = new int[xSize];
-		canWalkY = new int[ySize];
-		for (int i = 0; i < xSize; i++) { canWalkX[i] = 0; }
-		for (int i = 0; i < ySize; i++) { canWalkY[i] = 0; }
+	/* array shenanigans
+			int *canWalkX = NULL, *canWalkY = NULL;
+			int xSize = width;
+			int ySize = height;
+			canWalkX = new int[xSize];
+			canWalkY = new int[ySize];
+			for (int i = 0; i < xSize; i++) { canWalkX[i] = 0; }
+			for (int i = 0; i < ySize; i++) { canWalkY[i] = 0; }
 
-		// cleanup the array when done
-		delete[] canWalkX;
-		delete[] canWalkY;
-		canWalkX = NULL;
-		canWalkY = NULL;
-*/
-
-	for (int x = 0; x < width; x++) {
-		for (int y = 0; y < height; y++) {
-			if (canWalk(x, y))
-			{
-				TCODConsole::root->setCharBackground(x, y, lightGround);
+			// cleanup the array when done
+			delete[] canWalkX;
+			delete[] canWalkY;
+			canWalkX = NULL;
+			canWalkY = NULL;
+	*/
+	if (cheats.sv.renderCheat == true) {
+		for (int x = 0; x < width; x++) {
+			for (int y = 0; y < height; y++) {
+				if (canWalk(x, y))
+				{
+					TCODConsole::root->setCharBackground(x, y, lightGround);
+				}
+				else if (isWall(x, y))
+				{
+					TCODConsole::root->setCharBackground(x, y, lightWall);
+				}
 			}
-			else if (isWall(x, y))
-			{
-				TCODConsole::root->setCharBackground(x, y, lightWall);
-			}
+		}
+	}
+	for (Actor **iterator = engine.actors.begin(); iterator != engine.actors.end(); iterator++) {
+		Actor *actor = *iterator;
+		if (cheats.sv.renderCheat == true)
+		{
+			map->setInFov(actor->x, actor->y, true);
+		}
+		else {
+			map->setInFov(actor->x, actor->y, false);
+			engine.map->clearExplored(actor->x, actor->y);
 		}
 	}
 }

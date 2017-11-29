@@ -6,7 +6,7 @@
 Engine::Engine(int screenWidth, int screenHeight) : gameStatus(STARTUP), startupFov(fov.setFov(7)), screenWidth(screenWidth), screenHeight(screenHeight) {
 	TCODConsole::initRoot(screenWidth, screenHeight, CON_MAIN_TITLE, false);
 	player = new Actor(40, 25, '@', "player", TCODColor::white);
-	player->destructible = new PlayerDestructible(30, 2, "your carcass");
+	player->destructible = new PlayerDestructible(30, 2, "");
 	player->attacker = new Attacker(5);
 	player->ai = new PlayerAi();
 	actors.push(player);
@@ -32,7 +32,7 @@ void Engine::sendToBack(Actor *actor) {
 void Engine::update() {
 	if (gameStatus == STARTUP) map->computeFov();
 	gameStatus = IDLE;
-	TCODSystem::checkForEvent(TCOD_EVENT_KEY_PRESS, &lastKey, NULL);
+	TCODSystem::checkForEvent(TCOD_EVENT_KEY_PRESS | TCOD_EVENT_MOUSE, &lastKey, &mouse);
 	player->update();
 
 	if (gameStatus == NEW_TURN) {
@@ -47,13 +47,11 @@ void Engine::update() {
 
 void Engine::render() {
 	TCODConsole::root->clear();
-
-//	gui->message(TCODColor::lightCyan, "Welcome! Prepare to die! :)");
 	
 	//Draw the map
 	if (cheats.sv.renderCheat == true) {
 		map->renderCheat();
-	} 
+	}
 	else map->render();
 	
 	// Draw the actors
@@ -65,6 +63,7 @@ void Engine::render() {
 	}
 
 	// Render Player, stats, etc
+	fFrameRate = TCODSystem::getFps();
 	player->render();
 	gui->render();
 }
