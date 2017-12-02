@@ -31,10 +31,6 @@ public:
 
 private:
 	int startupFov;
-
-protected:
-	int mapHeight = map->height;
-	int mapWidth = map->width;
 };
 
 extern Engine engine;

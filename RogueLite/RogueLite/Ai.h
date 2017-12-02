@@ -1,5 +1,3 @@
-//#pragma once
-
 static const int TRACKING_TURNS = 3;
 
 class Ai {

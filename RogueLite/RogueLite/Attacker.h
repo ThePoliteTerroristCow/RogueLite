@@ -1,5 +1,3 @@
-//#pragma once
-
 class Attacker {
 public:
 	float power; // hit points given
