@@ -88,16 +88,14 @@ void Map::dig(int x1, int y1, int x2, int y2) {
 }
 
 void Map::generateNewDungeon(int x, int y) {
-	// Cant use original width & height values declared in Map.h; Doing so leads to crashing, hence the use of x & y.
-	// pretty sure its because they aren't properly initialized which leads to invalid values being passed. 
-
-	tiles = new Tile[x*y];
+	engine.map->~Map();
+	tiles = new Tile[x * y];
 	map = new TCODMap(x, y);
 	TCODBsp bsp(0, 0, x, y);
-	bsp.splitRecursive(NULL, 8, ROOM_MAX_SIZE, ROOM_MAX_SIZE, 1.5f, 1.5f);
+	TCODRandom *rng = TCODRandom::getInstance();
+	bsp.splitRecursive(rng, 8, ROOM_MAX_SIZE, ROOM_MAX_SIZE, 1.5f, 1.5f);
 	BspListener listener(*this);
 	bsp.traverseInvertedLevelOrder(&listener, NULL);
-	Map::Map(x, y);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -242,4 +240,13 @@ void Map::render() const {
 			}
 		}
 	}
+}
+
+//////////////////////////////////////////////////////////////////////////
+
+void Map::addItem(int x, int y) {
+	Actor *healthPotion = new Actor(x, y, '!', "Health Potion", TCODColor::violet);
+	healthPotion->blocks = false;
+	healthPotion->lootable = new Lootable();
+	engine.actors.push(healthPotion);
 }
