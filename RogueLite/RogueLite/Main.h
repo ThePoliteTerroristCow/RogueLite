@@ -4,6 +4,8 @@ class Actor;
 #include "Destructible.h"
 #include "Attacker.h"
 #include "Ai.h"
+#include "Lootable.h"
+#include "Container.h"
 #include "Actor.h"
 #include "Fov.h"
 #include "Gui.h"

@@ -9,6 +9,7 @@ Engine::Engine(int screenWidth, int screenHeight) : gameStatus(STARTUP), startup
 	player->destructible = new PlayerDestructible(30, 2, "");
 	player->attacker = new Attacker(5);
 	player->ai = new PlayerAi();
+	player->container = new Container(10); // player's default inventory space
 	actors.push(player);
 	map = new Map(80, 43);
 	gui = new Gui();

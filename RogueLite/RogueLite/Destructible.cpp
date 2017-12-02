@@ -4,6 +4,15 @@
 Destructible::Destructible(float maxHp, float defense, const char *corpseName) : maxHp(maxHp), currentHp(maxHp), defense(defense), corpseName(corpseName) {
 }
 
+float Destructible::heal(float amount) {
+	currentHp += amount;
+	if (currentHp > maxHp) {
+		amount -= currentHp - maxHp;
+		currentHp = maxHp;
+	}
+	return amount;
+}
+
 float Destructible::takeDamage(Actor *owner, float damage) {
 	// Circumvent damage if Godmode is active
 	if (cheats.sv.bGodmode == true) {

@@ -1,5 +1,3 @@
-//#pragma once
-
 static const int ROOM_MAX_SIZE = 12;
 static const int ROOM_MIN_SIZE = 6;
 static const int MAX_ROOM_MONSTERS = 3;
@@ -26,6 +24,8 @@ public:
 	void render() const;
 	void renderCheat() const;
 	void generateNewDungeon(int x, int y);
+
+	void addItem(int x, int y); // TESTING
 
 protected:	
 	friend class BspListener;

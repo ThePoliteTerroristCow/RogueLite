@@ -1,5 +1,3 @@
-//#pragma once
-
 class Destructible {
 public:
 	float maxHp; 
@@ -9,6 +7,7 @@ public:
 
 	Destructible(float maxHp, float defense, const char *corpseName);
 	inline bool isDead() { return currentHp <= 0; }
+	float heal(float amount);
 	float takeDamage(Actor *owner, float damage);
 	virtual void die(Actor *owner);
 };
