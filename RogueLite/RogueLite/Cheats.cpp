@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <Windows.h>
-#include <iostream>
 #include "Main.h"
 
 void Cheats::restartApp(char *processName) {

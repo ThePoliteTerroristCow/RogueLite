@@ -6,7 +6,7 @@ public:
 
 class Healer : public Lootable {
 public:
-	float amount; // how much hp to heal
+	float amount; // how much of something to do (ie. heal hp, add to DEF, etc)
 
 	Healer(float amount);
 	bool use(Actor *owner, Actor *wearer);
