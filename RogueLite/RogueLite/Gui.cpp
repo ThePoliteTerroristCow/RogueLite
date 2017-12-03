@@ -21,7 +21,14 @@ Gui::Message::~Message() { free(text); }
 
 //////////////////////////////////////////////////////////////////////////
 
-void Gui::message(const TCODColor &col, const char *text, ...) {
+void Gui::clearMsgCon() {
+	msgCon->clear();
+	log.clear();
+	ui.msgVars.bClearOnTurn = false;
+}
+
+void Gui::message(const TCODColor &col, bool clearOnTurn, const char *text ...) {
+	ui.msgVars.bClearOnTurn = clearOnTurn;
 	va_list ap;
 	char buf[256];
 	va_start(ap, text);
@@ -63,7 +70,7 @@ void Gui::render() {
 	msgCon->setDefaultBackground(TCODColor::black);
 	msgCon->clear();
 	renderMsgBox(1, 1, ui.msgFrame.MSG_WIDTH, ui.msgFrame.MSG_HEIGHT);
-	renderMouseLook();
+	if (ui.msgVars.bRenderMouseInfo == true) renderMouseLook();
 	TCODConsole::blit(msgCon, 0, 0, ui.msgFrame.MSG_WIDTH, ui.msgFrame.MSG_HEIGHT, TCODConsole::root, ui.msgFrame.MSG_LEFTX, ui.msgFrame.MSG_TOP);
 
 	// draw the cheats UI
@@ -109,7 +116,7 @@ void Gui::renderHealthBar(int x, int y, int width, const char *name, float value
 
 void Gui::renderMouseLook() {
 	if (!engine.map->isInFov(engine.mouse.cx, engine.mouse.cy)) {
-		// if mouse is out of fov
+		// do not print anything mouse is out of fov
 		return;
 	}
 
@@ -120,7 +127,24 @@ void Gui::renderMouseLook() {
 			// discard if hovering over player
 			if (actor == engine.player) return;
 
-			// early return if actor is dead
+			// check if actor is a container
+			if (actor->container) {
+				strName = actor->name;
+				msgCon->setDefaultForeground(TCODColor::white);
+				msgCon->clear();
+				msgCon->printRect(1, 1, ui.msgFrame.MSG_WIDTH, ui.msgFrame.MSG_HEIGHT, strName.c_str());
+				return;
+			}
+			// check if actor is lootable
+			if (actor->lootable) {
+				strName = actor->name;
+				msgCon->setDefaultForeground(TCODColor::white);
+				msgCon->clear();
+				msgCon->printRect(1, 1, ui.msgFrame.MSG_WIDTH, ui.msgFrame.MSG_HEIGHT, strName.c_str());
+				return;
+			}
+
+			// check if actor is dead
 			if (actor->destructible->isDead()) {
 				std::string strCorpseName = actor->destructible->corpseName;
 				msgCon->clear();
@@ -146,8 +170,8 @@ void Gui::renderMouseLook() {
 			strName.append(std::to_string(truncDEF));
 		}
 	}
-	msgCon->setDefaultForeground(TCODColor::white);
-	msgCon->clear();
+	// print the results
+	msgCon->setDefaultForeground(TCODColor::lightGrey);
 	msgCon->printRect(1, 1, ui.msgFrame.MSG_WIDTH, ui.msgFrame.MSG_HEIGHT, strName.c_str());
 }
 
