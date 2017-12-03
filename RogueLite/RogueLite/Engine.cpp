@@ -1,14 +1,13 @@
 #include <stdio.h>
-#include <chrono>
 #include "Main.h"
 
 // CONSTRUCTOR 
 Engine::Engine(int screenWidth, int screenHeight) : gameStatus(STARTUP), startupFov(fov.setFov(7)), screenWidth(screenWidth), screenHeight(screenHeight) {
 	TCODConsole::initRoot(screenWidth, screenHeight, CON_MAIN_TITLE, false);
 	player = new Actor(40, 25, '@', "player", TCODColor::white);
-	player->destructible = new PlayerDestructible(30, 2, "");
-	player->attacker = new Attacker(5);
-	player->ai = new PlayerAi();
+	player->destructible = new PlayerDestructible(30, 2, ""); 
+	player->attacker = new Attacker(5); 
+	player->ai = new PlayerAi(); 
 	player->container = new Container(10); // player's default inventory space
 	actors.push(player);
 	map = new Map(80, 43);
