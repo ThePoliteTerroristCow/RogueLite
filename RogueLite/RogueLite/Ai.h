@@ -9,9 +9,12 @@ public:
 
 class PlayerAi : public Ai {
 public:
+	void handleActionKey(Actor *owner, int ascii); // Handles single key-presses
+	void handleActionKeys(); // Handles multi key-presses
 	void update(Actor *owner);
 
 protected:
+	int inputX, inputY;
 	bool moveOrAttack(Actor *owner, int targetX, int targetY);
 };
 
