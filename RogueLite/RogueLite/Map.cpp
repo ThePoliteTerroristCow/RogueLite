@@ -96,6 +96,13 @@ void Map::generateNewDungeon(int x, int y) {
 	bsp.splitRecursive(rng, 8, ROOM_MAX_SIZE, ROOM_MAX_SIZE, 1.5f, 1.5f);
 	BspListener listener(*this);
 	bsp.traverseInvertedLevelOrder(&listener, NULL);
+	
+	if (!isWall(engine.player->x + 1, engine.player->y)) {
+		addItem(engine.player->x + 1, engine.player->y);
+	}
+	else if (!isWall(engine.player->x - 1, engine.player->y)) {
+		addItem(engine.player->x - 1, engine.player->y);
+	}
 }
 
 //////////////////////////////////////////////////////////////////////////
