@@ -135,10 +135,12 @@
     <ClCompile Include="Ai.cpp" />
     <ClCompile Include="Attacker.cpp" />
     <ClCompile Include="Cheats.cpp" />
+    <ClCompile Include="Container.cpp" />
     <ClCompile Include="Destructible.cpp" />
     <ClCompile Include="Engine.cpp" />
     <ClCompile Include="Fov.cpp" />
     <ClCompile Include="Gui.cpp" />
+    <ClCompile Include="Lootable.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Map.cpp" />
   </ItemGroup>
@@ -147,12 +149,14 @@
     <ClInclude Include="Ai.h" />
     <ClInclude Include="Attacker.h" />
     <ClInclude Include="Cheats.h" />
+    <ClInclude Include="Container.h" />
     <ClInclude Include="Destructible.h" />
     <ClInclude Include="Engine.h" />
     <ClInclude Include="Fov.h" />
     <ClInclude Include="Gui.h" />
     <ClInclude Include="Main.h" />
     <ClInclude Include="Map.h" />
+    <ClInclude Include="Lootable.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
