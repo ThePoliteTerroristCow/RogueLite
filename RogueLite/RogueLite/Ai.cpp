@@ -17,6 +17,12 @@ void PlayerAi::handleActionKey(Actor *owner, int ascii) {
 	// Pickup Items Key
 	case 'e':
 	{
+		// TESTING //
+		engine.parser->writeIni("js.ini");
+		engine.parser->writeJson("js.json");
+		//engine.parser->parseFile("js.json", "height");
+
+
 		bool found = false;
 		for (Actor **iterator = engine.actors.begin(); iterator != engine.actors.end(); iterator++) {
 			Actor *actor = *iterator;
