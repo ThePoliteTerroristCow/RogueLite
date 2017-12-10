@@ -43,4 +43,3 @@ void Cheats::updateEngine() {
 	engine.update();
 	engine.render();
 }
-
