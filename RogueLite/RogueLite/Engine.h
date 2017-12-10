@@ -18,6 +18,7 @@ public:
 	Actor *player; // Pointer to the player actor
 	Gui *gui;
 	Map *map;
+	Parser *parser;
 
 	float fFrameRate;
 	int screenWidth;

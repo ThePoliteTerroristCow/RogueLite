@@ -12,6 +12,7 @@ Engine::Engine(int screenWidth, int screenHeight) : gameStatus(STARTUP), startup
 	actors.push(player);
 	map = new Map(80, 43);
 	gui = new Gui();
+	parser = new Parser();
 }
 
 // DESTRUCTOR

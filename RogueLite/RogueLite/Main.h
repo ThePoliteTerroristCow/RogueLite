@@ -7,6 +7,7 @@ class Actor;
 #include "Lootable.h"
 #include "Container.h"
 #include "Actor.h"
+#include "Parser.h"
 #include "Fov.h"
 #include "Gui.h"
 #include "Map.h"

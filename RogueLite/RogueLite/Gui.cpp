@@ -203,5 +203,3 @@ void Gui::setMsgBoxXY() {
 	ui.msgFrame.MSG_WIDTH = (x1 + x2) - engine.screenWidth;
 }
 
-//////////////////////////////////////////////////////////////////////////
-
