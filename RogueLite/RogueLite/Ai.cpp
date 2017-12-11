@@ -18,8 +18,9 @@ void PlayerAi::handleActionKey(Actor *owner, int ascii) {
 	case 'e':
 	{
 		// TESTING //
-		engine.parser->writeIni("js.ini");
-		engine.parser->writeJson("js.json");
+		engine.parser->writeConfigi("graphics.ini", "MainWindow", "Windowed", !TCODConsole::root->isFullscreen());
+		engine.parser->writeConfigi("audio.ini", "Audio", "SteppingVolume", 0);
+		//engine.parser->writeJson("js.json");
 		//engine.parser->parseFile("js.json", "height");
 
 
