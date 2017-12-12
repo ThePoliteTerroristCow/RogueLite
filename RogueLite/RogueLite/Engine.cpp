@@ -20,6 +20,7 @@ Engine::~Engine() {
 	actors.clearAndDelete();
 	delete map;
 	delete gui;
+	delete parser;
 }
 
 //////////////////////////////////////////////////////////////////////////

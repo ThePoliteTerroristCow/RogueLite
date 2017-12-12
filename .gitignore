@@ -5,3 +5,6 @@ RogueLite/RogueLite/Debug/RogueLite.Build.CppClean.log
 RogueLite/RogueLite/Release/RogueLite.Build.CppClean.log
 RogueLite/RogueLite/Release/RogueLite.tlog/CL.read.1.tlog
 RogueLite/RogueLite/Release/RogueLite.log
+*.obj
+RogueLite/RogueLite/RogueLite.vcxproj.filters
+RogueLite/RogueLite/RogueLite.vcxproj

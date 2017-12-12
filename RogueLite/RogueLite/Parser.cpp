@@ -1,9 +1,9 @@
 #include <stdio.h>
+#include <string>
 #include "Main.h"
 
-Parser::Parser() {}
-
-Parser::~Parser() {}
+Parser::Parser() { cfgAudio = new cfgAudioClass; cfgGraphics = new cfgGraphicsClass; }
+Parser::~Parser() { delete cfgAudio; delete cfgGraphics; }
 
 bool Parser::dirExists(char *fileDir) {
 	FILE *fd;
@@ -28,215 +28,141 @@ bool Parser::fileExists(const char *filePath) {
 	}
 }
 
-void Parser::readDefAudioCfg() {
-	struct defAudioStruct {
-	public:
-		std::string nodeRoot = "Audio.";
-		std::string nodeMasterVolume = nodeRoot,
-			nodeAmbientVolume = nodeRoot,
-			nodeEffectsVolume = nodeRoot,
-			nodeMusicVolume = nodeRoot;
-		void appendAll() {
-			nodeAmbientVolume.append(defAudioStruct::ambientVolume);
-			nodeEffectsVolume.append(defAudioStruct::effectsVolume);
-			nodeMasterVolume.append(defAudioStruct::masterVolume);
-			nodeMusicVolume.append(defAudioStruct::musicVolume);
-		}
-	protected:
-		char *ambientVolume = "AmbientVolume";
-		char *effectsVolume = "EffectsVolume";
-		char *masterVolume = "MasterVolume";
-		char *musicVolume = "MusicVolume";
-	}defAudio;
-
-	defAudio.appendAll();
-	storedPtrees.storedAudioPtree.add(defAudio.nodeMasterVolume, 100);
-	storedPtrees.storedAudioPtree.add(defAudio.nodeAmbientVolume, 100);
-	storedPtrees.storedAudioPtree.add(defAudio.nodeEffectsVolume, 100);
-	storedPtrees.storedAudioPtree.add(defAudio.nodeMusicVolume, 100);
-}
-void Parser::readDefGraphicsCfg() {
-	struct defMainCon {
-	public:
-		std::string nodeRoot = "MainWindow.";
-		std::string nodeHeight = nodeRoot, nodeWidth = nodeRoot, nodeFS = nodeRoot;
-		void appendAll() {
-			nodeHeight.append(defMainCon::conHeight);
-			nodeWidth.append(defMainCon::conWidth);
-			nodeFS.append(defMainCon::conFS);
-		}
-	protected:
-		char *conHeight = "Height";
-		char *conWidth = "Width";
-		char *conFS = "Fullscreen";
-	}mainCon;
-
-	mainCon.appendAll();
-	storedPtrees.storedGraphicsPtree.add(mainCon.nodeWidth, engine.screenWidth);
-	storedPtrees.storedGraphicsPtree.add(mainCon.nodeHeight, engine.screenHeight);
-	storedPtrees.storedGraphicsPtree.add(mainCon.nodeFS, TCODConsole::root->isFullscreen());
-}
-void Parser::writeDefAudioCfg() {
-	std::string filePath = configPath;
-	filePath.append("audio.ini");
-	if (dirExists(configPath) == false) {
-		if (!TCODSystem::createDirectory(configPath)) {} // failure, else success
-	}
-
-	// This is probably a bad way to do it, but it'll work until I figure out how to add things more dynamically
-	struct defAudioStruct {
-	public:
-		std::string nodeRoot = "Audio.";
-		std::string nodeMasterVolume = nodeRoot,
-			nodeAmbientVolume = nodeRoot,
-			nodeEffectsVolume = nodeRoot,
-			nodeMusicVolume = nodeRoot;
-		void appendAll() {
-			nodeAmbientVolume.append(defAudioStruct::ambientVolume);
-			nodeEffectsVolume.append(defAudioStruct::effectsVolume);
-			nodeMasterVolume.append(defAudioStruct::masterVolume);
-			nodeMusicVolume.append(defAudioStruct::musicVolume);
-		}
-	protected:
-		char *ambientVolume = "AmbientVolume";
-		char *effectsVolume = "EffectsVolume";
-		char *masterVolume = "MasterVolume";
-		char *musicVolume = "MusicVolume";
-	}defAudio;
-
-	defAudio.appendAll();
-	storedPtrees.storedAudioPtree.add(defAudio.nodeMasterVolume, 100);
-	storedPtrees.storedAudioPtree.add(defAudio.nodeAmbientVolume, 100);
-	storedPtrees.storedAudioPtree.add(defAudio.nodeEffectsVolume, 100);
-	storedPtrees.storedAudioPtree.add(defAudio.nodeMusicVolume, 100);
-	pt::write_ini(filePath, storedPtrees.storedAudioPtree);
-}
-void Parser::writeDefGraphicsCfg() {
-	std::string filePath = configPath;
-	filePath.append("graphics.ini");
-	if (dirExists(configPath) == false) {
-		if (!TCODSystem::createDirectory(configPath)) {} // failure, else success
-	}
-
-	// This is probably a bad way to do it, but it'll work until I figure out how to add things more dynamically
-	struct defMainCon {
-	public:
-		std::string nodeRoot = "MainWindow.";
-		std::string nodeHeight = nodeRoot, nodeWidth = nodeRoot, nodeFS = nodeRoot;
-		void appendAll() {
-			nodeHeight.append(defMainCon::conHeight);
-			nodeWidth.append(defMainCon::conWidth);
-			nodeFS.append(defMainCon::conFS);
-		}
-	protected:
-		char *conHeight = "Height";
-		char *conWidth = "Width";
-		char *conFS = "Fullscreen";
-	}mainCon;
-
-	mainCon.appendAll();
-	storedPtrees.storedGraphicsPtree.add(mainCon.nodeWidth, engine.screenWidth);
-	storedPtrees.storedGraphicsPtree.add(mainCon.nodeHeight, engine.screenHeight);
-	storedPtrees.storedGraphicsPtree.add(mainCon.nodeFS, TCODConsole::root->isFullscreen());
-	pt::write_ini(filePath, storedPtrees.storedGraphicsPtree);
-}
-
 //////////////////////////////////////////////////////////////////////////
 
-void Parser::writeConfigi(char *fileName, char *rootNode, char *childVariable, int value) {
-	std::string filePath;
-	filePath.append(configPath);
-	filePath.append(fileName);
-	std::string nodeVar;
-	nodeVar.append(rootNode);
-	nodeVar.append(".");
-	nodeVar.append(childVariable);
-
+void Parser::readAudioCfg() {
+	FILE *fd;
 	if (dirExists(configPath) == false) {
-		if (!TCODSystem::createDirectory(configPath)) {} // failure, else success
+		TCODSystem::createDirectory(configPath);
 	}
-
-	if (strcmp(fileName, "graphics.ini") == 0) {
-		if (fileExists(filePath.c_str()) == true) {
-			readDefGraphicsCfg();
-			try {
-				pt::read_ini(filePath, storedPtrees.rootGraphicsPtree);
-			}
-			catch (const pt::ptree_error &ptError) {
-				printf("%s", ptError.what());
-			}
-			try {
-				storedPtrees.rootGraphicsPtree.add(nodeVar, value);
-			}
-			catch (const pt::ptree_error &ptError) {
-				printf("%s", ptError.what());
-			}
-			try {
-				pt::write_ini(filePath, storedPtrees.rootGraphicsPtree);
-			}
-			catch (const pt::ptree_error &ptError) {
-				printf("%s", ptError.what());
-			}
-		}
-		else writeDefGraphicsCfg();
+	if (fileExists(cfgAudio->fileName.c_str()) == false) {
+		cfgAudio->verifyDefAudio();
 	}
-	else if (strcmp(fileName, "audio.ini") == 0) {
-		if (fileExists(filePath.c_str()) == true) {
-			readDefAudioCfg();
-			try {
-				pt::read_ini(filePath, storedPtrees.rootAudioPtree);
-			}
-			catch (const pt::ptree_error &ptError) {
-				printf("%s", ptError.what());
-			}
-			try {
-				storedPtrees.rootAudioPtree.add(nodeVar, value);
-			}
-			catch (const pt::ptree_error &ptError) {
-				printf("%s", ptError.what());
-			}
-			try {
-				pt::write_ini(filePath, storedPtrees.rootAudioPtree);
-			}
-			catch (const pt::ptree_error &ptError) {
-				printf("%s", ptError.what());
-			}
-		}
-		else writeDefAudioCfg();
-	}
-	else { printf("config file not found!\n"); return; }
-}
-
-//////////////////////////////////////////////////////////////////////////
-
-void Parser::writeJson(char *fileName) {
-	std::string filePath;
-	filePath.append(configPath);
-	filePath.append(fileName);
-
-	// Check if config directory exists. Create it if it doesn't
-	if (dirExists(configPath) == false) {
-		if (!TCODSystem::createDirectory(configPath)) {
-			printf("Unable to create directory '%s' as it may already exist\n", configPath); // write this to the log later on...
-		}
-		else printf("Created directory '%s'\n", configPath); // write this to the log later on...
-	}
-
-	pt::ptree root;
-	root.add("Equipable.Armour.Wood.Value", 10);
-	pt::write_json(filePath, root);
-}
-
-void Parser::parseFile(char *fileName, char *valueName) {
-	pt::ptree root;
-	int fValue = 0;
-	if (fileName == NULL || valueName == NULL) {
-		printf("Error parsing value '%s' in file '%s'!\n", valueName, fileName);
+	fd = fopen(cfgAudio->fileName.c_str(), "rt");
+	if (fd == NULL) {
+		printf("Error reading '%s'\n", cfgAudio->fileName.c_str());
 		return;
 	}
 
-	pt::read_json(fileName, root);
-	fValue = root.get<int>(valueName, 0);
-	printf("\nRead value '%i' from variable '%s' in file '%s'\n", fValue, valueName, fileName);
-	printf("\nValue: %i\n", fValue);
+	char line[512], tmpLeft[512], tmpRight[512];
+	char *ptr;
+	while (fgets(line, 511, fd) != NULL) {
+		while (line[strlen(line) - 1] == '\n') line[strlen(line) - 1] = '\0';
+		if (line[0] == '#') continue;
+		ptr = strstr(line, "=");
+		if (ptr == NULL) continue;
+		*ptr = '\0';
+		while (line[strlen(line) - 1] == ' ') line[strlen(line) - 1] = '\0';
+		strcpy(tmpLeft, line);
+		strcpy(tmpRight, ptr + 1);
+		while (tmpRight[strlen(tmpRight) - 1] == ' ') tmpRight[strlen(tmpRight) - 1] = '\0';
+		while (tmpRight[0] == ' ') strcpy(tmpRight, tmpRight + 1);
+
+		// Find & store our values
+		if (_stricmp(tmpLeft, cfgAudio->cfg.names.ambientVolume) == 0) {
+			cfgAudio->cfg.values.iAmbientVolume = atoi(tmpRight);
+			cfgAudio->cfg.verify.bAmbientVolume = true;
+			//printf("%s %i\n", cfgAudio->cfg.names.ambientVolume, cfgAudio->cfg.values.iAmbientVolume);
+			continue;
+		}
+		if (_stricmp(tmpLeft, cfgAudio->cfg.names.effectsVolume) == 0) {
+			cfgAudio->cfg.values.iEffectsVolume = atoi(tmpRight);
+			cfgAudio->cfg.verify.bEffectsVolume = true;
+			//printf("%s %i\n", cfgAudio->cfg.names.effectsVolume, cfgAudio->cfg.values.iEffectsVolume);
+			continue;
+		}
+		if (_stricmp(tmpLeft, cfgAudio->cfg.names.masterVolume) == 0) {
+			cfgAudio->cfg.values.iMasterVolume = atoi(tmpRight);
+			cfgAudio->cfg.verify.bMasterVolume = true;
+			//printf("%s %i\n", cfgAudio->cfg.names.masterVolume, cfgAudio->cfg.values.iMasterVolume);
+			continue;
+		}
+		if (_stricmp(tmpLeft, cfgAudio->cfg.names.musicVolume) == 0) {
+			cfgAudio->cfg.values.iMusicVolume = atoi(tmpRight);
+			cfgAudio->cfg.verify.bMusicVolume = true;
+			//printf("%s %i\n", cfgAudio->cfg.names.musicVolume, cfgAudio->cfg.values.iMusicVolume);
+			continue;
+		}
+		if (_stricmp(tmpLeft, cfgAudio->cfg.names.uiVolume) == 0) {
+			cfgAudio->cfg.values.iUIVolume = atoi(tmpRight);
+			cfgAudio->cfg.verify.bUIVolume = true;
+			//printf("%s %i\n", cfgAudio->cfg.names.uiVolume, cfgAudio->cfg.values.iUIVolume);
+			continue;
+		}
+	}
+	fclose(fd);
+	cfgAudio->verifyDefAudio();
+	return;
+}
+
+void Parser::readGraphicsCfg() {
+	FILE *fd;
+	if (dirExists(configPath) == false) {
+		TCODSystem::createDirectory(configPath);
+	}
+	if (fileExists(cfgGraphics->fileName.c_str()) == false) {
+		cfgGraphics->verifyDefGraphics();
+	}
+	fd = fopen(cfgGraphics->fileName.c_str(), "rt");
+	if (fd == NULL) {
+		printf("Error reading '%s'\n", cfgGraphics->fileName.c_str());
+		return;
+	}
+
+	char line[512], tmpLeft[512], tmpRight[512];
+	char *ptr;
+	while (fgets(line, 511, fd) != NULL) {
+		while (line[strlen(line) - 1] == '\n') line[strlen(line) - 1] = '\0';
+		if (line[0] == '#') continue;
+		ptr = strstr(line, "=");
+		if (ptr == NULL) continue;
+		*ptr = '\0';
+		while (line[strlen(line) - 1] == ' ') line[strlen(line) - 1] = '\0';
+		strcpy(tmpLeft, line);
+		strcpy(tmpRight, ptr + 1);
+		while (tmpRight[strlen(tmpRight) - 1] == ' ') tmpRight[strlen(tmpRight) - 1] = '\0';
+		while (tmpRight[0] == ' ') strcpy(tmpRight, tmpRight + 1);
+
+		// Find & store our values
+		if (_stricmp(tmpLeft, cfgGraphics->cfg.names.antiAliasing) == 0) {
+			cfgGraphics->cfg.values.iAntiAliasing = atoi(tmpRight);
+			cfgGraphics->cfg.verify.bAntiAliasing = true;
+			//printf("%s %i\n", cfgGraphics->cfg.names.antiAliasing, cfgGraphics->cfg.values.iAntiAliasing);
+			continue;
+		}
+		if (_stricmp(tmpLeft, cfgGraphics->cfg.names.fullscreen) == 0) {
+			cfgGraphics->cfg.values.iFullscreen = atoi(tmpRight);
+			cfgGraphics->cfg.verify.bFullscreen = true;
+			//printf("%s %i\n", cfgGraphics->cfg.names.fullscreen, cfgGraphics->cfg.values.iFullscreen);
+			continue;
+		}
+		if (_stricmp(tmpLeft, cfgGraphics->cfg.names.rendererType) == 0) {
+			cfgGraphics->cfg.values.iRendererType = atoi(tmpRight);
+			cfgGraphics->cfg.verify.bRendererType = true;
+			//printf("%s %i\n", cfgGraphics->cfg.names.rendererType, cfgGraphics->cfg.values.iRendererType);
+			continue;
+		}
+		if (_stricmp(tmpLeft, cfgGraphics->cfg.names.windowHeight) == 0) {
+			cfgGraphics->cfg.values.iWindowHeight = atoi(tmpRight);
+			cfgGraphics->cfg.verify.bWindowHeight = true;
+			//printf("%s %i\n", cfgGraphics->cfg.names.windowHeight, cfgGraphics->cfg.values.iWindowHeight);
+			continue;
+		}
+		// cWindowTitle returns '80' instead of the actual name. Maybe try using std::string instead??
+		if (_stricmp(tmpLeft, cfgGraphics->cfg.names.windowTitle) == 0) {
+			cfgGraphics->cfg.values.cWindowTitle = tmpRight;
+			cfgGraphics->cfg.verify.bWindowTitle = true;
+			//printf("%s %s\n", cfgGraphics->cfg.names.windowTitle, cfgGraphics->cfg.values.cWindowTitle);
+			continue;
+		}
+		if (_stricmp(tmpLeft, cfgGraphics->cfg.names.windowWidth) == 0) {
+			cfgGraphics->cfg.values.iWindowWidth = atoi(tmpRight);
+			cfgGraphics->cfg.verify.bWindowWidth = true;
+			//printf("%s %i\n", cfgGraphics->cfg.names.windowWidth, cfgGraphics->cfg.values.iWindowWidth);
+			continue;
+		}
+	}
+	fclose(fd);
+	cfgGraphics->verifyDefGraphics();
+	return;
 }
