@@ -1,9 +1,6 @@
 # RogueLite
 A personal project that utilizes the libtcod 1.6.3 library.  
-Debug and Release builds of whatever I'm working on are in their respective \RogueLite\Build folders  
-
--- Boost Library --  
-Instead of using libtcod's built-in parser support I have (for the time being) opted to use the parser support included in the 'Boost' package. Until I have the time to streamline the files used, Boost version 1.65.1 will have to be setup properly on your end if you want to compile the code here. As a temporary remedy I've begun including the debug/release files on the 'Dev' branch in addition to the main release branch.   
+Debug and Release builds of whatever I'm working on are in their respective \RogueLite\Build folders   
   
 -- VS2015 Setup --  
 The following project properties must be modified to point to the correct locations in the included \libtcod\ folder. Their locations must also be modified according to the Configuration Mode (ie Release Mode, Debug Mode)  
