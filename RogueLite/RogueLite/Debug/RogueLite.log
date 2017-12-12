@@ -1,6 +1,6 @@
-﻿  Parser.cpp
+﻿  main.cpp
+  Parser.cpp
   Map.cpp
-  main.cpp
   Lootable.cpp
   Gui.cpp
 c:\users\tosh\documents\github\roguelite\roguelite\roguelite\gui.cpp(156): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
@@ -19,5 +19,6 @@ c:\users\tosh\documents\github\roguelite\roguelite\roguelite\ai.cpp(227): warnin
   Actor.cpp
   Generating Code...
 c:\users\tosh\documents\github\roguelite\roguelite\roguelite\container.cpp(14): warning C4715: 'Container::add': not all control paths return a value
+  LINK : C:\Users\Tosh\Documents\Github\RogueLite\RogueLite\Debug\RogueLite.exe not found or not built by the last incremental link; performing full link
   RogueLite.vcxproj -> C:\Users\Tosh\Documents\Github\RogueLite\RogueLite\Debug\RogueLite.exe
   RogueLite.vcxproj -> C:\Users\Tosh\Documents\Github\RogueLite\RogueLite\Debug\RogueLite.pdb (Partial PDB)
