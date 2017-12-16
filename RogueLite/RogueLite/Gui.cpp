@@ -4,12 +4,19 @@
 #include "Main.h"
 
 Gui::Gui() {
-	cheatsCon = new TCODConsole((engine.screenWidth - 2) - ui.cheats.CHEAT_WIDTH, ui.cheats.CHEAT_TOP);
+	miniCharacterUI = new MiniCharacterStatsUI;
+	cheatsUI = new CheatsUI;
+	cheatsUI->verifyFile();
+	miniCharacterUI->verifyFile();
+
+	cheatsCon = new TCODConsole((engine.screenWidth - 2) - cheatsUI->cfg.values.width, cheatsUI->cfg.values.topLeftX);
 	healthCon = new TCODConsole(engine.screenWidth, ui.health.HEALTH_TOP);
 	msgCon = new TCODConsole(engine.screenWidth, 4);
 }
 
 Gui::~Gui() {
+	delete miniCharacterUI;
+	delete cheatsUI;
 	delete healthCon;
 	delete cheatsCon;
 	delete msgCon;
@@ -77,8 +84,8 @@ void Gui::render() {
 	if (cheats.sv.cheatsEnabled == true) {
 		cheatsCon->setDefaultBackground(TCODColor::black);
 		cheatsCon->clear();
-		renderCheatBar(1, 1, ui.cheats.CHEAT_WIDTH, ui.cheats.CHEAT_NAME, TCODColor::darkGrey);
-		TCODConsole::blit(cheatsCon, 0, 0, engine.screenWidth, ui.cheats.CHEAT_TOP, TCODConsole::root, (engine.screenWidth - 2) - ui.cheats.CHEAT_WIDTH, engine.screenHeight - ui.cheats.CHEAT_TOP);
+		renderCheatBar(1, 1, cheatsUI->cfg.values.width, cheatsUI->cfg.values.uiTitle.c_str(), TCODColor::darkGrey);
+		TCODConsole::blit(cheatsCon, 0, 0, engine.screenWidth, cheatsUI->cfg.values.topLeftX, TCODConsole::root, (engine.screenWidth - 2) - cheatsUI->cfg.values.width, engine.screenHeight - cheatsUI->cfg.values.topLeftX);
 	}
 }
 
@@ -86,7 +93,7 @@ void Gui::render() {
 
 void Gui::renderCheatBar(int x, int y, int width, const char *name, const TCODColor &backColor) {
 	cheatsCon->setDefaultBackground(backColor);
-	cheatsCon->rect(x, y, width, ui.cheats.CHEAT_HEIGHT, false, TCOD_BKGND_SET);
+	cheatsCon->rect(x, y, width, cheatsUI->cfg.values.height, false, TCOD_BKGND_SET);
 
 	cheatsCon->setDefaultForeground(TCODColor::white);
 	cheatsCon->printEx(x, y, TCOD_BKGND_NONE, TCOD_LEFT, "%s", name);
@@ -111,7 +118,9 @@ void Gui::renderHealthBar(int x, int y, int width, const char *name, float value
 	// print text on top of the bar
 	healthCon->setDefaultForeground(TCODColor::white);
 	healthCon->printEx(x, y, TCOD_BKGND_NONE, TCOD_LEFT, "%s: %g/%g", name, value, maxValue);
-	healthCon->printEx(x, y + 1, TCOD_BKGND_NONE, TCOD_LEFT, "FPS: %f", engine.fFrameRate);
+	if (engine.parser->cfgGraphics->cfg.values.iShowFramerate == 1) {
+		healthCon->printEx(x, y + 1, TCOD_BKGND_NONE, TCOD_LEFT, "FPS: %f", engine.fFrameRate);
+	}
 }
 
 void Gui::renderMouseLook() {
@@ -195,10 +204,10 @@ void Gui::renderMsgBox(int x, int y, int width, int height) {
 
 void Gui::setMsgBoxXY() {
 	bSetMsgBoxXY = true;
-	const int x1 = engine.screenWidth - ui.cheats.CHEAT_WIDTH - 2;
+	const int x1 = engine.screenWidth - cheatsUI->cfg.values.width - 2;
 	const int x2 = engine.screenWidth - ui.health.HEALTH_WIDTH - 1;
 	ui.msgFrame.MSG_TOP = engine.screenHeight - ui.health.HEALTH_TOP;
-	ui.msgFrame.MSG_HEIGHT = (engine.screenHeight + ui.cheats.CHEAT_HEIGHT) - engine.screenHeight;
+	ui.msgFrame.MSG_HEIGHT = (engine.screenHeight + cheatsUI->cfg.values.height) - engine.screenHeight;
 	ui.msgFrame.MSG_LEFTX = ui.health.HEALTH_WIDTH + 1;
 	ui.msgFrame.MSG_WIDTH = (x1 + x2) - engine.screenWidth;
 }

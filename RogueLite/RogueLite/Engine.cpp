@@ -12,7 +12,11 @@ Engine::Engine(int screenWidth, int screenHeight) : gameStatus(STARTUP), startup
 	actors.push(player);
 	map = new Map(80, 43);
 	gui = new Gui();
+	
 	parser = new Parser();
+	engine.parser->readAudioCfg();
+	engine.parser->readGraphicsCfg();
+	TCODConsole::setWindowTitle(engine.parser->cfgGraphics->cfg.values.cWindowTitle.c_str());
 }
 
 // DESTRUCTOR
@@ -53,8 +57,7 @@ void Engine::render() {
 	//Draw the map
 	if (cheats.sv.renderCheat == true) {
 		map->renderCheat();
-	}
-	else map->render();
+	} else map->render();
 	
 	// Draw the actors
 	for (Actor **iterator = actors.begin(); iterator != actors.end(); iterator++) {
@@ -65,7 +68,9 @@ void Engine::render() {
 	}
 
 	// Render Player, stats, etc
-	fFrameRate = TCODSystem::getFps();
+	if (parser->cfgGraphics->cfg.values.iSetFramerate != 0) TCODSystem::setFps(parser->cfgGraphics->cfg.values.iSetFramerate);
+	else TCODSystem::setFps(0);
+	if (parser->cfgGraphics->cfg.values.iShowFramerate == 1) fFrameRate = TCODSystem::getFps();
 	player->render();
 	gui->render();
 }

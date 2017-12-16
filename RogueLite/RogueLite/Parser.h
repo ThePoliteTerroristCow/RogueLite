@@ -13,7 +13,6 @@ public:
 	void readGraphicsCfg();
 
 protected:
-	char *configPath = "config\\";
-	bool dirExists(char *fileDir);
+	bool dirExists(const char *fileDir);
 	bool fileExists(const char *filePath);
 };

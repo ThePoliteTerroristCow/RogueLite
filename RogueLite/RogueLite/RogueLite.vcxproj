@@ -149,7 +149,9 @@
     <ClInclude Include="Attacker.h" />
     <ClInclude Include="CfgAudio.h" />
     <ClInclude Include="CfgGraphics.h" />
+    <ClInclude Include="MiniCharacterStatsUI.h" />
     <ClInclude Include="Cheats.h" />
+    <ClInclude Include="CheatsUI.h" />
     <ClInclude Include="Container.h" />
     <ClInclude Include="Destructible.h" />
     <ClInclude Include="Engine.h" />

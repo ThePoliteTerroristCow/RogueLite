@@ -1,6 +1,6 @@
 //#pragma once
 
-#define CON_MAIN_TITLE "libtcod C++ tutorial"
+#define CON_MAIN_TITLE ""
 
 class Engine {
 public:

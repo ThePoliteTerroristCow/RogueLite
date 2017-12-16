@@ -5,7 +5,7 @@
 Parser::Parser() { cfgAudio = new cfgAudioClass; cfgGraphics = new cfgGraphicsClass; }
 Parser::~Parser() { delete cfgAudio; delete cfgGraphics; }
 
-bool Parser::dirExists(char *fileDir) {
+bool Parser::dirExists(const char *fileDir) {
 	FILE *fd;
 	fd = fopen(fileDir, "r");
 	if (fd == NULL) {
@@ -32,8 +32,11 @@ bool Parser::fileExists(const char *filePath) {
 
 void Parser::readAudioCfg() {
 	FILE *fd;
-	if (dirExists(configPath) == false) {
-		TCODSystem::createDirectory(configPath);
+	if (dirExists(cfgAudio->dir.dataDirName.c_str()) == false) {
+		TCODSystem::createDirectory(cfgAudio->dir.dataDirName.c_str());
+		if (dirExists(cfgAudio->dir.configDirName.c_str()) == false) {
+			TCODSystem::createDirectory(cfgAudio->dir.configDirName.c_str());
+		}
 	}
 	if (fileExists(cfgAudio->fileName.c_str()) == false) {
 		cfgAudio->verifyDefAudio();
@@ -62,31 +65,26 @@ void Parser::readAudioCfg() {
 		if (_stricmp(tmpLeft, cfgAudio->cfg.names.ambientVolume) == 0) {
 			cfgAudio->cfg.values.iAmbientVolume = atoi(tmpRight);
 			cfgAudio->cfg.verify.bAmbientVolume = true;
-			//printf("%s %i\n", cfgAudio->cfg.names.ambientVolume, cfgAudio->cfg.values.iAmbientVolume);
 			continue;
 		}
 		if (_stricmp(tmpLeft, cfgAudio->cfg.names.effectsVolume) == 0) {
 			cfgAudio->cfg.values.iEffectsVolume = atoi(tmpRight);
 			cfgAudio->cfg.verify.bEffectsVolume = true;
-			//printf("%s %i\n", cfgAudio->cfg.names.effectsVolume, cfgAudio->cfg.values.iEffectsVolume);
 			continue;
 		}
 		if (_stricmp(tmpLeft, cfgAudio->cfg.names.masterVolume) == 0) {
 			cfgAudio->cfg.values.iMasterVolume = atoi(tmpRight);
 			cfgAudio->cfg.verify.bMasterVolume = true;
-			//printf("%s %i\n", cfgAudio->cfg.names.masterVolume, cfgAudio->cfg.values.iMasterVolume);
 			continue;
 		}
 		if (_stricmp(tmpLeft, cfgAudio->cfg.names.musicVolume) == 0) {
 			cfgAudio->cfg.values.iMusicVolume = atoi(tmpRight);
 			cfgAudio->cfg.verify.bMusicVolume = true;
-			//printf("%s %i\n", cfgAudio->cfg.names.musicVolume, cfgAudio->cfg.values.iMusicVolume);
 			continue;
 		}
 		if (_stricmp(tmpLeft, cfgAudio->cfg.names.uiVolume) == 0) {
 			cfgAudio->cfg.values.iUIVolume = atoi(tmpRight);
 			cfgAudio->cfg.verify.bUIVolume = true;
-			//printf("%s %i\n", cfgAudio->cfg.names.uiVolume, cfgAudio->cfg.values.iUIVolume);
 			continue;
 		}
 	}
@@ -94,11 +92,13 @@ void Parser::readAudioCfg() {
 	cfgAudio->verifyDefAudio();
 	return;
 }
-
 void Parser::readGraphicsCfg() {
 	FILE *fd;
-	if (dirExists(configPath) == false) {
-		TCODSystem::createDirectory(configPath);
+	if (dirExists(cfgGraphics->dir.dataDirName.c_str()) == false) {
+		TCODSystem::createDirectory(cfgGraphics->dir.dataDirName.c_str());
+		if (dirExists(cfgGraphics->dir.configDirName.c_str()) == false) {
+			TCODSystem::createDirectory(cfgGraphics->dir.configDirName.c_str());
+		}
 	}
 	if (fileExists(cfgGraphics->fileName.c_str()) == false) {
 		cfgGraphics->verifyDefGraphics();
@@ -127,38 +127,41 @@ void Parser::readGraphicsCfg() {
 		if (_stricmp(tmpLeft, cfgGraphics->cfg.names.antiAliasing) == 0) {
 			cfgGraphics->cfg.values.iAntiAliasing = atoi(tmpRight);
 			cfgGraphics->cfg.verify.bAntiAliasing = true;
-			//printf("%s %i\n", cfgGraphics->cfg.names.antiAliasing, cfgGraphics->cfg.values.iAntiAliasing);
 			continue;
 		}
 		if (_stricmp(tmpLeft, cfgGraphics->cfg.names.fullscreen) == 0) {
 			cfgGraphics->cfg.values.iFullscreen = atoi(tmpRight);
 			cfgGraphics->cfg.verify.bFullscreen = true;
-			//printf("%s %i\n", cfgGraphics->cfg.names.fullscreen, cfgGraphics->cfg.values.iFullscreen);
 			continue;
 		}
 		if (_stricmp(tmpLeft, cfgGraphics->cfg.names.rendererType) == 0) {
 			cfgGraphics->cfg.values.iRendererType = atoi(tmpRight);
 			cfgGraphics->cfg.verify.bRendererType = true;
-			//printf("%s %i\n", cfgGraphics->cfg.names.rendererType, cfgGraphics->cfg.values.iRendererType);
+			continue;
+		}
+		if (_stricmp(tmpLeft, cfgGraphics->cfg.names.setFramerate) == 0) {
+			cfgGraphics->cfg.values.iSetFramerate = atoi(tmpRight);
+			cfgGraphics->cfg.verify.bSetFramerate = true;
+			continue;
+		}
+		if (_stricmp(tmpLeft, cfgGraphics->cfg.names.showFramerate) == 0) {
+			cfgGraphics->cfg.values.iShowFramerate = atoi(tmpRight);
+			cfgGraphics->cfg.verify.bShowFramerate = true;
 			continue;
 		}
 		if (_stricmp(tmpLeft, cfgGraphics->cfg.names.windowHeight) == 0) {
 			cfgGraphics->cfg.values.iWindowHeight = atoi(tmpRight);
 			cfgGraphics->cfg.verify.bWindowHeight = true;
-			//printf("%s %i\n", cfgGraphics->cfg.names.windowHeight, cfgGraphics->cfg.values.iWindowHeight);
 			continue;
 		}
-		// cWindowTitle returns '80' instead of the actual name. Maybe try using std::string instead??
 		if (_stricmp(tmpLeft, cfgGraphics->cfg.names.windowTitle) == 0) {
 			cfgGraphics->cfg.values.cWindowTitle = tmpRight;
 			cfgGraphics->cfg.verify.bWindowTitle = true;
-			//printf("%s %s\n", cfgGraphics->cfg.names.windowTitle, cfgGraphics->cfg.values.cWindowTitle);
 			continue;
 		}
 		if (_stricmp(tmpLeft, cfgGraphics->cfg.names.windowWidth) == 0) {
 			cfgGraphics->cfg.values.iWindowWidth = atoi(tmpRight);
 			cfgGraphics->cfg.verify.bWindowWidth = true;
-			//printf("%s %i\n", cfgGraphics->cfg.names.windowWidth, cfgGraphics->cfg.values.iWindowWidth);
 			continue;
 		}
 	}

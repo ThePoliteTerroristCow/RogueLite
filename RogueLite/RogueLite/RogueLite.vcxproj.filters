@@ -13,7 +13,13 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Header Files\config">
+    <Filter Include="Header Files\data">
+      <UniqueIdentifier>{30d2a318-7be2-4cee-a56c-192834cfaeb5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\data\ui">
+      <UniqueIdentifier>{987ca12e-a849-4336-a03f-0fa61758a0d0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\data\config">
       <UniqueIdentifier>{190a5e7b-0cc4-4bcc-b017-96f29c393f81}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -99,10 +105,16 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="CfgGraphics.h">
-      <Filter>Header Files\config</Filter>
+      <Filter>Header Files\data\config</Filter>
     </ClInclude>
     <ClInclude Include="CfgAudio.h">
-      <Filter>Header Files\config</Filter>
+      <Filter>Header Files\data\config</Filter>
+    </ClInclude>
+    <ClInclude Include="CheatsUI.h">
+      <Filter>Header Files\data\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="MiniCharacterStatsUI.h">
+      <Filter>Header Files\data\ui</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

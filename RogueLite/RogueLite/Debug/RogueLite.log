@@ -1,15 +1,15 @@
-﻿  main.cpp
-  Parser.cpp
+﻿  Parser.cpp
   Map.cpp
+  main.cpp
   Lootable.cpp
   Gui.cpp
-c:\users\tosh\documents\github\roguelite\roguelite\roguelite\gui.cpp(156): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
-c:\users\tosh\documents\github\roguelite\roguelite\roguelite\gui.cpp(157): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
-c:\users\tosh\documents\github\roguelite\roguelite\roguelite\gui.cpp(158): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
-c:\users\tosh\documents\github\roguelite\roguelite\roguelite\gui.cpp(159): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+c:\users\tosh\documents\github\roguelite\roguelite\roguelite\gui.cpp(165): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+c:\users\tosh\documents\github\roguelite\roguelite\roguelite\gui.cpp(166): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+c:\users\tosh\documents\github\roguelite\roguelite\roguelite\gui.cpp(167): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+c:\users\tosh\documents\github\roguelite\roguelite\roguelite\gui.cpp(168): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
   Fov.cpp
   Engine.cpp
-c:\users\tosh\documents\github\roguelite\roguelite\roguelite\engine.cpp(68): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+c:\users\tosh\documents\github\roguelite\roguelite\roguelite\engine.cpp(73): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
   Destructible.cpp
   Container.cpp
   Cheats.cpp
@@ -19,6 +19,5 @@ c:\users\tosh\documents\github\roguelite\roguelite\roguelite\ai.cpp(227): warnin
   Actor.cpp
   Generating Code...
 c:\users\tosh\documents\github\roguelite\roguelite\roguelite\container.cpp(14): warning C4715: 'Container::add': not all control paths return a value
-  LINK : C:\Users\Tosh\Documents\Github\RogueLite\RogueLite\Debug\RogueLite.exe not found or not built by the last incremental link; performing full link
   RogueLite.vcxproj -> C:\Users\Tosh\Documents\Github\RogueLite\RogueLite\Debug\RogueLite.exe
   RogueLite.vcxproj -> C:\Users\Tosh\Documents\Github\RogueLite\RogueLite\Debug\RogueLite.pdb (Partial PDB)
