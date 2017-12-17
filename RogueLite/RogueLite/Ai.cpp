@@ -17,10 +17,6 @@ void PlayerAi::handleActionKey(Actor *owner, int ascii) {
 	// Pickup Items Key
 	case 'e':
 	{
-		// TESTING //
-		engine.parser->readAudioCfg();
-		engine.parser->readGraphicsCfg();
-
 		bool found = false;
 		for (Actor **iterator = engine.actors.begin(); iterator != engine.actors.end(); iterator++) {
 			Actor *actor = *iterator;

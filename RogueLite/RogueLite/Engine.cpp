@@ -12,10 +12,8 @@ Engine::Engine(int screenWidth, int screenHeight) : gameStatus(STARTUP), startup
 	actors.push(player);
 	map = new Map(80, 43);
 	gui = new Gui();
-	
 	parser = new Parser();
-	engine.parser->readAudioCfg();
-	engine.parser->readGraphicsCfg();
+	parser->setupConfigFiles();
 	TCODConsole::setWindowTitle(engine.parser->cfgGraphics->cfg.values.cWindowTitle.c_str());
 }
 
@@ -68,7 +66,10 @@ void Engine::render() {
 	}
 
 	// Render Player, stats, etc
-	if (parser->cfgGraphics->cfg.values.iSetFramerate != 0) TCODSystem::setFps(parser->cfgGraphics->cfg.values.iSetFramerate);
+	if (parser->cfgGraphics->cfg.values.iSetFramerate != 0) {
+		if (parser->cfgGraphics->cfg.values.iSetFramerate < 0) parser->cfgGraphics->cfg.values.iSetFramerate = parser->cfgGraphics->cfg.defVals.iSetFramerate;
+		TCODSystem::setFps(parser->cfgGraphics->cfg.values.iSetFramerate);
+	}
 	else TCODSystem::setFps(0);
 	if (parser->cfgGraphics->cfg.values.iShowFramerate == 1) fFrameRate = TCODSystem::getFps();
 	player->render();

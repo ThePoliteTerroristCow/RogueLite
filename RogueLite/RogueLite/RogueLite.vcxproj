@@ -148,6 +148,7 @@
     <ClInclude Include="Ai.h" />
     <ClInclude Include="Attacker.h" />
     <ClInclude Include="CfgAudio.h" />
+    <ClInclude Include="CfgControls.h" />
     <ClInclude Include="CfgGraphics.h" />
     <ClInclude Include="MiniCharacterStatsUI.h" />
     <ClInclude Include="Cheats.h" />

@@ -116,5 +116,8 @@
     <ClInclude Include="MiniCharacterStatsUI.h">
       <Filter>Header Files\data\ui</Filter>
     </ClInclude>
+    <ClInclude Include="CfgControls.h">
+      <Filter>Header Files\data\config</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
